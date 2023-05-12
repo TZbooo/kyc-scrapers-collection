@@ -6,6 +6,8 @@ __pycache__/
 # C extensions
 *.so
 
+links.txt
+scraping.json
 # Distribution / packaging
 *.sqlite
 .Python

@@ -25,6 +25,8 @@ def convert_description_to_paragraphs(description: str) -> str:
 
 def delete_source_names_from_text(channel: types.Channel, message: types.Message, text: str) -> str:
     text = text.replace(channel.title, '')
+    text = text.replace('Дорогие подписчики и гости канала!', '')
+
     try:
         forwarded_channel_name = message.forward.chat.title
         text = text.replace(forwarded_channel_name, '')
@@ -57,12 +59,13 @@ def scrape_message(
     if len(text) < min_characters:
         logger.info('message hasn\'t min characters, skip')
         return
-
+    
     text = delete_source_names_from_text(
         channel=channel,
         message=message,
         text=text
     )
+
     article_groups = re.search(r'(^.+?[\n\.:])(.+)', text, flags=re.DOTALL)
     try:
         name = article_groups.group(1).strip()

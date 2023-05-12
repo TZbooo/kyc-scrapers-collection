@@ -2,14 +2,21 @@
     {
         "channel_link": "https://t.me/CompromatSNG",
         "offset": 0,
-        "limit": 50,
+        "limit": 0,
         "reverse": false,
         "min_characters": 280
     },
     {
         "channel_link": "https://t.me/vchkogpu",
         "offset": 0,
-        "limit": 5,
+        "limit": 0,
+        "reverse": false,
+        "min_characters": 280
+    },
+    {
+        "channel_link": "https://t.me/generalsvr",
+        "offset": 0,
+        "limit": 10,
         "reverse": false,
         "min_characters": 280
     }

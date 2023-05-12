@@ -43,3 +43,6 @@ def add_kyc_article(
         logger.info(f'article already created {article_id=}')
     else:
         logger.success(f'article added successfully {article_id=}')
+    
+    with open('links.txt', 'a') as f:
+        f.write(f'https://kycbase.io/ru/articles/{article_id}/\n')
