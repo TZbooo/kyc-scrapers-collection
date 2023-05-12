@@ -1,0 +1,34 @@
+version: '3'
+
+services:
+  scraper:
+    build: .
+    command: python -m app.main
+    env_file:
+      - .env
+    volumes:
+      - ./:/code
+    depends_on:
+      - worker
+
+  worker:
+    build: .
+    command: celery -A app.worker.celery worker --loglevel=INFO
+    env_file:
+      - .env
+    volumes:
+      - ./:/code
+    depends_on:
+      - redis
+
+  flower:
+    image: mher/flower
+    ports:
+      - 5557:5555
+    depends_on:
+      - redis
+    env_file:
+      - .env
+
+  redis:
+    image: redis:7-alpine
