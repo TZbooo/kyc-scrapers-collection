@@ -14,6 +14,13 @@ def get_message_image(message: types.Message) -> io.BytesIO:
         image = io.BytesIO(message.download_media(file=bytes))
         image.name = f'{message.id}-{uuid.uuid4().hex}.jpg'
         return image
+    
+
+async def get_message_image_async(message: types.Message) -> io.BytesIO:
+    if isinstance(message.media, types.MessageMediaPhoto):
+        image = io.BytesIO(await message.download_media(file=bytes))
+        image.name = f'{message.id}-{uuid.uuid4().hex}.jpg'
+        return image
 
 
 def convert_description_to_paragraphs(description: str) -> str:
@@ -77,6 +84,49 @@ def scrape_message(
     description = convert_description_to_paragraphs(description)
     article_date = message.date.strftime('%Y-%m-%d')
     image = get_message_image(message)
+
+    add_kyc_article(
+        name=name,
+        description=description,
+        date=article_date,
+        image=image,
+        message=message,
+        channel=channel
+    )
+
+
+@logger.catch
+async def scrape_message_async(
+    min_characters: int,
+    message: types.Message,
+    channel: types.Channel
+):
+    if not message.text:
+        logger.info('text not found, skip')
+        return
+
+    text = BeautifulSoup(message.text, 'lxml').text
+    if len(text) < min_characters:
+        logger.info('message hasn\'t min characters, skip')
+        return
+    
+    text = delete_source_names_from_text(
+        channel=channel,
+        message=message,
+        text=text
+    )
+
+    article_groups = re.search(r'(^.+?[\n\.:])(.+)', text, flags=re.DOTALL)
+    try:
+        name = article_groups.group(1).strip()
+        description = f'{name}\n{article_groups.group(2).strip()}'
+    except AttributeError:
+        logger.info(f'regex not found in {text=}')
+        return
+
+    description = convert_description_to_paragraphs(description)
+    article_date = message.date.strftime('%Y-%m-%d')
+    image = await get_message_image_async(message)
 
     add_kyc_article(
         name=name,

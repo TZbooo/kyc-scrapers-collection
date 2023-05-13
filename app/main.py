@@ -13,7 +13,10 @@ from app.config import (
 
     SCRAPING_CONF
 )
-from app.services import scrape_message, get_scraper_conf_by_channel_username
+from app.services import (
+    scrape_message_async,
+    get_scraper_conf_by_channel_username
+)
 from app.worker import scrape_channel_task
 
 
@@ -39,6 +42,7 @@ if __name__ == '__main__':
 
     channel_usernames_list = [scraper['channel_link'] for scraper in SCRAPING_CONF]
     logger.info(channel_usernames_list)
+
     with TelegramClient(StringSession(MTPROTO_TOKEN), MTPROTO_API_ID, MTPROTO_API_HASH) as client:
         client.parse_mode = 'html'
 
@@ -47,11 +51,11 @@ if __name__ == '__main__':
             logger.info('start scraping new message')
             message = event.message
             channel = await event.get_chat()
-            
+
             scraper = get_scraper_conf_by_channel_username(channel.username)
             min_characters = scraper['min_characters']
 
-            scrape_message(
+            await scrape_message_async(
                 min_characters=min_characters,
                 message=message,
                 channel=channel
