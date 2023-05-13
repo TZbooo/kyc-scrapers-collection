@@ -50,14 +50,15 @@ def get_scraper_conf_by_channel_username(channel_username: str) -> dict:
     for scraper in SCRAPING_CONF:
         if channel_username == get_username_from_channel_link(scraper['channel_link']):
             return scraper
+        
 
-
-@logger.catch
-def scrape_message(
-    min_characters: int,
+def get_article_name_and_description(
     message: types.Message,
-    channel: types.Channel
-):
+    channel: types.Channel,
+    min_characters: int
+) -> list[str] | None:
+    '''return: list[name: str, description: str] | None'''
+
     if not message.text:
         logger.info('text not found, skip')
         return
@@ -77,9 +78,26 @@ def scrape_message(
     try:
         name = article_groups.group(1).strip()
         description = f'{name}\n{article_groups.group(2).strip()}'
+        return name, description
     except AttributeError:
         logger.info(f'regex not found in {text=}')
         return
+
+
+@logger.catch
+def scrape_message(
+    min_characters: int,
+    message: types.Message,
+    channel: types.Channel
+):
+    name_and_description = get_article_name_and_description(
+        message=message,
+        channel=channel,
+        min_characters=min_characters
+    )
+    if name_and_description is None:
+        return
+    name, description = name_and_description
 
     description = convert_description_to_paragraphs(description)
     article_date = message.date.strftime('%Y-%m-%d')
@@ -101,28 +119,14 @@ async def scrape_message_async(
     message: types.Message,
     channel: types.Channel
 ):
-    if not message.text:
-        logger.info('text not found, skip')
-        return
-
-    text = BeautifulSoup(message.text, 'lxml').text
-    if len(text) < min_characters:
-        logger.info('message hasn\'t min characters, skip')
-        return
-    
-    text = delete_source_names_from_text(
-        channel=channel,
+    name_and_description = get_article_name_and_description(
         message=message,
-        text=text
+        channel=channel,
+        min_characters=min_characters
     )
-
-    article_groups = re.search(r'(^.+?[\n\.:])(.+)', text, flags=re.DOTALL)
-    try:
-        name = article_groups.group(1).strip()
-        description = f'{name}\n{article_groups.group(2).strip()}'
-    except AttributeError:
-        logger.info(f'regex not found in {text=}')
+    if name_and_description is None:
         return
+    name, description = name_and_description
 
     description = convert_description_to_paragraphs(description)
     article_date = message.date.strftime('%Y-%m-%d')
