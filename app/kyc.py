@@ -1,7 +1,6 @@
 import io
 
 import requests
-from telethon import types
 
 from app.config import logger, KYC_BASE_API_TOKEN
 
@@ -11,13 +10,9 @@ def add_kyc_article(
     description: str,
     date: str,
     image: io.BytesIO | None,
-    message: types.Message,
-    channel: types.Channel
+    origin: str,
+    source: str,
 ):
-    logger.info(f'start article adding {message.id=}')
-    origin = f'https://t.me/{channel.username}/'
-    source = f'{origin}{message.id}/'
-
     data = {
         'name': name,
         'description': description,

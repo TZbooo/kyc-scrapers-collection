@@ -25,7 +25,7 @@ async def get_message_image_async(message: types.Message) -> io.BytesIO:
 
 def convert_description_to_paragraphs(description: str) -> str:
     paragraph_list = ''
-    for paragraph in description.strip().replace('\n\n', '\n').split('\n'):
+    for paragraph in re.sub(r'\n{2,}', '\n', description.strip()).split('\n'):
         paragraph_list += f'<p>{paragraph}</p>'
     return paragraph_list
 
@@ -103,13 +103,17 @@ def scrape_message(
     article_date = message.date.strftime('%Y-%m-%d')
     image = get_message_image(message)
 
+    origin = f'https://t.me/{channel.username}/'
+    source = f'{origin}{message.id}/'
+
+    logger.info(f'start article adding {message.id=}')
     add_kyc_article(
         name=name,
         description=description,
         date=article_date,
         image=image,
-        message=message,
-        channel=channel
+        origin=origin,
+        source=source
     )
 
 

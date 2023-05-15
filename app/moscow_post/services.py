@@ -1,35 +1,110 @@
-import requests
+import io
+import re
+import time
+import uuid
+import itertools
+from datetime import datetime
+
+from selenium import webdriver
+from selenium.webdriver.common.by import By
+from selenium.webdriver.chrome.service import Service as ChromeService
+from webdriver_manager.chrome import ChromeDriverManager
+
+from app.kyc import add_kyc_article
 
 
-MOSCOW_POST_COOKIES_LIST = [
-    '__lhash_=0d9ba47f496fd35fd84064586b00b11c; _gid=GA1.2.1262841686.1684003182; tmr_lvid=6af5b28e0c6edfb9f0aff15ed8aa9417; tmr_lvidTS=1684003182108; adtech_uid=f2b68cde-d4c8-49bc-936e-77eb85962c6f%3Amoscow-post.su; top100_id=t1.7020705.844847242.1684003182386; _ym_uid=168400318499451436; _ym_d=1684003184; _ym_isad=2; uuid=624547d4c6cb34b9%3A1; __upin=RIgw7FJEmFkS/+CcXkuGZw; pmtimesig=[[1684003196055,0]]; __js_p_=10,1800,0,0,0; __jhash_=785; __jua_=Mozilla%2F5.0%20%28X11%3B%20Linux%20x86_64%29%20AppleWebKit%2F537.36%20%28KHTML%2C%20like%20Gecko%29%20Chrome%2F110.0.0.0%20Safari%2F537.36; __hash_=884f0a155b84cc46b753a6ae626c9719; _ym_visorc=b; _ga=GA1.2.152415158.1684003182; last_visit=1684006271708%3A%3A1684017071708; tmr_detect=0%7C1684017073955; _ga_K9NVDZQ134=GS1.1.1684017012.3.1.1684017153.0.0.0; t3_sid_7020705=s1.1109246196.1684017014332.1684017153833.3.14'
-]
+def get_article_image(driver: webdriver.Chrome, url: str) -> io.BytesIO:
+    driver.get(url)
+    image = io.BytesIO(driver.find_element(By.CSS_SELECTOR, 'img[src^=http]').screenshot_as_png)
+    image.name = f'moscow-post-{uuid.uuid4().hex}.png'
+    return image
 
-headers = {
-    'Accept': '*/*',
-    'Accept-Language': 'ru-RU,ru;q=0.9,en-US;q=0.8,en;q=0.7',
-    'Connection': 'keep-alive',
-    'Cookie': MOSCOW_POST_COOKIES_LIST[0],
-    'Referer': 'http://www.moscow-post.su/all/',
-    'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/110.0.0.0 Safari/537.36',
-}
 
-for page in range(1, 604):
-    params = {
-        'load': '1',
-        'page': '1',
-        'start': '14.11.2022',
-        'end': '14.05.2023',
-        'sort': 'DESC',
-    }
+def convert_article_parts_to_html(
+    title: str,
+    sub_title: str,
+    text: str
+) -> str:
+    article_text = f'<h1>{title}</h1><h2>{sub_title}</h2>'
 
-    response = requests.get('http://www.moscow-post.su/all/', params=params, headers=headers, verify=False)
-    response.encoding = 'utf-8-sig'
-    json_reponse = response.json()
-    
-    article_url_list = [
-        'http://www.moscow-post.su' + i['full_url']
-        for i in json_reponse['articles']
-    ]
-    print(article_url_list)
-    break
+    text = re.sub(r'\n{2,}', '\n', text.strip()).split('\n')
+    for paragraph in text:
+        article_text += f'<p>{paragraph}</p>'
+    return article_text
+
+
+def scrape_article_page(driver: webdriver.Chrome, url: str):
+    driver.get(url)
+    print('page was loaded')
+
+    published_time_string = driver.find_element(
+        By.CSS_SELECTOR,
+        'meta[property="article:published_time"]'
+    ).get_attribute('content')[5:][:-15]
+    date = datetime.strptime(published_time_string, '%d %b %Y').strftime('%Y-%m-%d')
+
+    title = driver.find_element(By.TAG_NAME, 'h1').text
+    sub_title = driver.find_element(By.TAG_NAME, 'h2').text
+    text = driver.find_element(By.CLASS_NAME, 'article-text').text
+
+    image_url = driver.find_element(By.CSS_SELECTOR, 'h2 + div img').get_attribute('src')
+    image = get_article_image(
+        driver=driver,
+        url=image_url
+    )
+
+    html_text = convert_article_parts_to_html(
+        title=title,
+        sub_title=sub_title,
+        text=text
+    )
+
+    add_kyc_article(
+        name=title,
+        description=html_text,
+        date=date,
+        image=image,
+        origin=url,
+        source='http://www.moscow-post.su/'
+    )
+
+
+options = webdriver.ChromeOptions()
+options.add_argument('--headless')
+
+driver = webdriver.Chrome(
+    service=ChromeService(ChromeDriverManager().install()),
+    options=options
+)
+driver.implicitly_wait(120)
+driver.get('http://www.moscow-post.su/all/')
+time.sleep(20)
+
+for page in itertools.count(1):
+    response = driver.execute_script(f'''
+    return await (await fetch("http://www.moscow-post.su/all/?load=1&page={page}&start=15.11.2022&end=15.05.2023&sort=DESC", {{
+        "headers": {{
+            "accept": "*/*",
+            "accept-language": "ru-RU,ru;q=0.9,en-US;q=0.8,en;q=0.7"
+        }},
+        "referrer": "http://www.moscow-post.su/all/",
+        "referrerPolicy": "strict-origin-when-cross-origin",
+        "body": null,
+        "method": "GET",
+        "mode": "cors",
+        "credentials": "include"
+    }})).json();
+    ''')
+    print(response)
+    if response['articles'] == []:
+        break
+
+    for article_item in response['articles']:
+        url = 'http://www.moscow-post.su' + article_item['full_url']
+        print(url)
+        scrape_article_page(
+            driver=driver,
+            url=url
+        )
+
+driver.quit()
