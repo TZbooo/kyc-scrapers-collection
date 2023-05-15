@@ -1,6 +1,7 @@
 from typing import Generator
 
 from app.config import logger, SCRAPING_CONF
+from app.moscow_post.tasks import scrape_moscow_post_task
 from app.telegram_channel.tasks import scrape_telegram_channel_task, listen_for_new_channels_messages
 
 
@@ -28,3 +29,5 @@ if __name__ == '__main__':
     logger.info(channel_username_list)
 
     listen_for_new_channels_messages.apply_async(kwargs={'channel_username_list': channel_username_list})
+
+    scrape_moscow_post_task.apply_async()

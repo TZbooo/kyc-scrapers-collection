@@ -1,16 +1,27 @@
 import io
 import re
-import time
 import uuid
-import itertools
 from datetime import datetime
 
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.service import Service as ChromeService
-from webdriver_manager.chrome import ChromeDriverManager
 
 from app.kyc import add_kyc_article
+
+
+def get_driver() -> webdriver.Chrome:
+    options = webdriver.ChromeOptions()
+    options.add_argument('--headless')
+    options.add_argument('--no-sandbox')
+    options.add_argument('--disable-dev-shm-usage')
+
+    driver = webdriver.Chrome(
+        service=ChromeService(executable_path='/code/chromedriver'),
+        options=options
+    )
+    driver.implicitly_wait(120)
+    return driver
 
 
 def get_article_image(driver: webdriver.Chrome, url: str) -> io.BytesIO:
@@ -67,44 +78,3 @@ def scrape_article_page(driver: webdriver.Chrome, url: str):
         origin=url,
         source='http://www.moscow-post.su/'
     )
-
-
-options = webdriver.ChromeOptions()
-options.add_argument('--headless')
-
-driver = webdriver.Chrome(
-    service=ChromeService(ChromeDriverManager().install()),
-    options=options
-)
-driver.implicitly_wait(120)
-driver.get('http://www.moscow-post.su/all/')
-time.sleep(20)
-
-for page in itertools.count(1):
-    response = driver.execute_script(f'''
-    return await (await fetch("http://www.moscow-post.su/all/?load=1&page={page}&start=15.11.2022&end=15.05.2023&sort=DESC", {{
-        "headers": {{
-            "accept": "*/*",
-            "accept-language": "ru-RU,ru;q=0.9,en-US;q=0.8,en;q=0.7"
-        }},
-        "referrer": "http://www.moscow-post.su/all/",
-        "referrerPolicy": "strict-origin-when-cross-origin",
-        "body": null,
-        "method": "GET",
-        "mode": "cors",
-        "credentials": "include"
-    }})).json();
-    ''')
-    print(response)
-    if response['articles'] == []:
-        break
-
-    for article_item in response['articles']:
-        url = 'http://www.moscow-post.su' + article_item['full_url']
-        print(url)
-        scrape_article_page(
-            driver=driver,
-            url=url
-        )
-
-driver.quit()
