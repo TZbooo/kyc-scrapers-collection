@@ -1,9 +1,16 @@
 import time
 import itertools
+import pytz
+from datetime import datetime
 
 from app.config import logger
 from app.worker import celery
-from .services import get_driver, scrape_article_page
+from .services import get_driver, get_article_url_list, scrape_article_page
+
+
+@celery.on_after_finalize.connect
+def setup_periodic_tasks(sender, **kwargs):
+    sender.add_periodic_task(60 * 20, check_for_new_articles_task.s())
 
 
 @celery.task(name='scrape_moscow_post_articles_chunk_task')
@@ -18,6 +25,28 @@ def scrape_moscow_post_articles_chunk_task(article_url_list: list[str]) -> bool:
                 url=article_url
             )
             time.sleep(1)
+            break
+    finally:
+        driver.quit()
+    return True
+
+
+@celery.task(name='check_for_new_articles_task')
+def check_for_new_articles_task() -> bool:
+    driver = get_driver()
+    try:
+        driver.get('http://www.moscow-post.su/all/')
+        logger.info('wait for page load')
+        time.sleep(15)
+
+        article_url_list = get_article_url_list(
+            driver=driver,
+            page=1,
+            reverse=False,
+            limit=2
+        )
+        scrape_moscow_post_articles_chunk_task.apply_async(kwargs={'article_url_list': article_url_list})
+        logger.info('new articles was checked')
     finally:
         driver.quit()
     return True
@@ -25,37 +54,25 @@ def scrape_moscow_post_articles_chunk_task(article_url_list: list[str]) -> bool:
 
 @celery.task(name='scrape_moscow_post_task')
 def scrape_moscow_post_task() -> bool:
-    driver = get_driver()
+    now_msk = datetime.now(pytz.timezone('Europe/Moscow')).strftime('%d.%m.%Y')
+    logger.trace(f'current date in moscow {now_msk}')
 
+    driver = get_driver()
     try:
         driver.get('http://www.moscow-post.su/all/')
         logger.info('wait for page load')
-        time.sleep(20)
+        time.sleep(15)
 
         for page in itertools.count(1):
-            response = driver.execute_script(f'''
-            return await (await fetch("http://www.moscow-post.su/all/?load=1&page={page}&start=15.11.2022&end=15.05.2023&sort=DESC", {{
-                "headers": {{
-                    "accept": "*/*",
-                    "accept-language": "ru-RU,ru;q=0.9,en-US;q=0.8,en;q=0.7"
-                }},
-                "referrer": "http://www.moscow-post.su/all/",
-                "referrerPolicy": "strict-origin-when-cross-origin",
-                "body": null,
-                "method": "GET",
-                "mode": "cors",
-                "credentials": "include"
-            }})).json();
-            ''')
-            logger.trace(response)
-            if response['articles'] == []:
+            article_url_list = get_article_url_list(
+                driver=driver,
+                page=page
+            )
+            if not article_url_list:
                 break
 
-            article_url_list = [
-                'http://www.moscow-post.su' + article_item['full_url']
-                for article_item in response['articles']
-            ]
             scrape_moscow_post_articles_chunk_task.apply_async(kwargs={'article_url_list': article_url_list})
+            time.sleep(10)
     finally:
         driver.quit()
     return True

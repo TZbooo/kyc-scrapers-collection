@@ -7,6 +7,7 @@ from app.config import (
 
 
 celery = Celery(__name__)
+celery.control.purge()
 celery.conf.broker_url = CELERY_BROKER_URL
 celery.conf.result_backend = CELERY_RESULT_BACKEND
 celery.autodiscover_tasks([
