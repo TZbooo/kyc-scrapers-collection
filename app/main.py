@@ -13,7 +13,7 @@ def start_telegram_channels_scraping() -> Generator:
             'limit': scraper['limit'],
             'reverse': scraper['reverse'],
             'min_characters': scraper['min_characters']
-        }) for scraper in SCRAPING_CONF
+        }) for scraper in SCRAPING_CONF['telegram']
     ]
 
 
@@ -25,7 +25,7 @@ if __name__ == '__main__':
 
     logger.success('manual scraping complete! start listen for new messages')
 
-    channel_username_list = [scraper['channel_link'] for scraper in SCRAPING_CONF]
+    channel_username_list = [scraper['channel_link'] for scraper in SCRAPING_CONF['telegram']]
     logger.info(channel_username_list)
 
     listen_for_new_channels_messages.apply_async(kwargs={'channel_username_list': channel_username_list})

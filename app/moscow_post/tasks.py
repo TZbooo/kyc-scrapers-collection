@@ -5,7 +5,7 @@ from datetime import datetime
 
 from selenium.common.exceptions import JavascriptException
 
-from app.config import logger
+from app.config import logger, SCRAPING_CONF
 from app.worker import celery
 from .services import get_driver, get_article_url_list, scrape_article_page
 
@@ -62,7 +62,7 @@ def scrape_moscow_post_task() -> bool:
     logger.info('wait for page load')
     time.sleep(15)
 
-    for page in itertools.count(1):
+    for page in itertools.count(SCRAPING_CONF['moscow_post']['start_page']):
         logger.info(f'{page=}')
 
         if not page % 10:
@@ -76,6 +76,7 @@ def scrape_moscow_post_task() -> bool:
         try:
             article_url_list = get_article_url_list(
                 driver=driver,
+                reverse=SCRAPING_CONF['moscow_post']['reverse'],
                 page=page
             )
         except JavascriptException:

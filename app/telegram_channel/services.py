@@ -47,7 +47,7 @@ def get_username_from_channel_link(channel_link: str) -> str:
 
 
 def get_scraper_conf_by_channel_username(channel_username: str) -> dict:
-    for scraper in SCRAPING_CONF:
+    for scraper in SCRAPING_CONF['telegram']:
         if channel_username == get_username_from_channel_link(scraper['channel_link']):
             return scraper
         

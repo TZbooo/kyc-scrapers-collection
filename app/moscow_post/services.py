@@ -117,6 +117,6 @@ def scrape_article_page(driver: webdriver.Chrome, url: str):
         description=html_text,
         date=date,
         image=image,
-        origin=url,
-        source='http://www.moscow-post.su/'
+        origin='http://www.moscow-post.su/',
+        source=url
     )
