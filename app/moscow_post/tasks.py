@@ -3,6 +3,8 @@ import itertools
 import pytz
 from datetime import datetime
 
+from selenium.common.exceptions import JavascriptException
+
 from app.config import logger
 from app.worker import celery
 from .services import get_driver, get_article_url_list, scrape_article_page
@@ -24,8 +26,6 @@ def scrape_moscow_post_articles_chunk_task(article_url_list: list[str]) -> bool:
                 driver=driver,
                 url=article_url
             )
-            time.sleep(1)
-            break
     finally:
         driver.quit()
     return True
@@ -58,21 +58,35 @@ def scrape_moscow_post_task() -> bool:
     logger.trace(f'current date in moscow {now_msk}')
 
     driver = get_driver()
-    try:
-        driver.get('http://www.moscow-post.su/all/')
-        logger.info('wait for page load')
-        time.sleep(15)
+    driver.get('http://www.moscow-post.su/all/')
+    logger.info('wait for page load')
+    time.sleep(15)
 
-        for page in itertools.count(1):
+    for page in itertools.count(1):
+        logger.info(f'{page=}')
+
+        if not page % 10:
+            driver.quit()
+            driver = get_driver()
+            driver.get('http://www.moscow-post.su/all/')
+
+            logger.info('wait for page load')
+            time.sleep(15)
+    
+        try:
             article_url_list = get_article_url_list(
                 driver=driver,
                 page=page
             )
-            if not article_url_list:
-                break
+        except JavascriptException:
+            logger.error('scraper was detected')
+            continue
 
-            scrape_moscow_post_articles_chunk_task.apply_async(kwargs={'article_url_list': article_url_list})
-            time.sleep(10)
-    finally:
-        driver.quit()
+        if not article_url_list:
+            break
+
+        scrape_moscow_post_articles_chunk_task.apply_async(kwargs={'article_url_list': article_url_list})
+        time.sleep(30)
+
+    driver.quit()
     return True

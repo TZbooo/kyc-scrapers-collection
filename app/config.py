@@ -6,7 +6,7 @@ import itertools
 from loguru import logger
 
 
-logger.add('logs.log', serialize=True, rotation='1 day')
+logger.add('logs.log', rotation='1 day')
 
 BASE_DIR = pathlib.Path(__file__).parent.parent.absolute()
 
@@ -25,5 +25,5 @@ CELERY_RESULT_BACKEND = os.environ['CELERY_RESULT_BACKEND']
 PROXY_CYCLE = itertools.cycle([
     'http://SOGBee:d25Hs5A@188.191.164.19:9078',
     'http://SOGMeg:rTd57fsDh@188.191.164.19:9005',
-    'http://1109:SOGMTS:gF56k2S@goldproxy2.linkpc.net'
+    'http://SOGMTS:gF56k2S@goldproxy2.linkpc.net:1109'
 ])

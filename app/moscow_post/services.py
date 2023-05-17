@@ -22,12 +22,6 @@ def get_driver() -> webdriver.Chrome:
 
     proxy = next(PROXY_CYCLE)
     logger.info(f'current {proxy=}')
-    seleniumwire_options = {
-        'proxy': {
-            'http': proxy,
-            'https': proxy
-        }
-    }
 
     driver = webdriver.Chrome(
         service=ChromeService(ChromeDriverManager().install()),
@@ -47,12 +41,12 @@ def get_article_image(driver: webdriver.Chrome) -> io.BytesIO | None:
         return image
     except:
         return None
-    
+
 
 def get_article_url_list(driver: webdriver.Chrome, page: int, reverse: bool = True, limit: int | None = None) -> list[str]:
     sort_type = 'ASC' if reverse else 'DESC'
     now_msk = datetime.now(pytz.timezone('Europe/Moscow')).strftime('%d.%m.%Y')
-    logger.trace(f'current date in moscow {now_msk}')
+    logger.debug(f'current date in moscow {now_msk}')
 
     response = driver.execute_script(f'''
     return await (await fetch("http://www.moscow-post.su/all/?load=1&page={page}&start=1.01.2007&end={now_msk}&sort={sort_type}", {{
@@ -72,6 +66,8 @@ def get_article_url_list(driver: webdriver.Chrome, page: int, reverse: bool = Tr
         'http://www.moscow-post.su' + article_item['full_url']
         for article_item in response['articles'][:limit]
     ]
+    logger.debug(article_url_list)
+
     return article_url_list
 
 
@@ -101,7 +97,8 @@ def scrape_article_page(driver: webdriver.Chrome, url: str):
     date = datetime.strptime(published_time_string, '%d %b %Y').strftime('%Y-%m-%d')
 
     title = driver.find_element(By.TAG_NAME, 'h1').text
-    logger.trace(f'{title=}')
+    logger.debug(f'{title=} {url=}')
+
     try:
         sub_title = driver.find_element(By.TAG_NAME, 'h2').text
     except NoSuchElementException:
