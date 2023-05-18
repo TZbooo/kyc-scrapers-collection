@@ -7,7 +7,8 @@ from selenium.common.exceptions import JavascriptException
 
 from app.config import logger, SCRAPING_CONF
 from app.worker import celery
-from .services import get_driver, get_article_url_list, scrape_article_page
+from bsslib import get_driver
+from .services import get_article_url_list, scrape_article_page
 
 
 @celery.on_after_finalize.connect

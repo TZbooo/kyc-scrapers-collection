@@ -10,25 +10,8 @@ from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.chrome.service import Service as ChromeService
 from webdriver_manager.chrome import ChromeDriverManager
 
-from app.config import logger, PROXY_CYCLE
+from app.config import logger
 from app.kyc import add_kyc_article
-
-
-def get_driver() -> webdriver.Chrome:
-    options = webdriver.ChromeOptions()
-    options.add_argument('--headless')
-    options.add_argument('--no-sandbox')
-    options.add_argument('--disable-dev-shm-usage')
-
-    proxy = next(PROXY_CYCLE)
-    logger.info(f'current {proxy=}')
-
-    driver = webdriver.Chrome(
-        service=ChromeService(ChromeDriverManager().install()),
-        options=options
-    )
-    driver.implicitly_wait(120)
-    return driver
 
 
 def get_article_image(driver: webdriver.Chrome) -> io.BytesIO | None:
