@@ -31,5 +31,7 @@ if __name__ == '__main__':
 
     listen_for_new_channels_messages.apply_async(kwargs={'channel_username_list': channel_username_list})
 
-    scrape_moscow_post_task.apply_async()
-    scrape_lenta_ru_task.apply_async()
+    if SCRAPING_CONF['moscow_post']['run_scraper']:
+        scrape_moscow_post_task.apply_async()
+    if SCRAPING_CONF['lenta_ru']['run_scraper']:
+        scrape_lenta_ru_task.apply_async()
