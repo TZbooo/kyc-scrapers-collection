@@ -10,7 +10,7 @@ from selenium.common.exceptions import NoSuchElementException
 
 from app.config import logger
 from app.kyc import add_kyc_article
-from bsslib import convert_article_parts_to_html
+from app.bsslib import convert_article_parts_to_html
 
 
 def get_article_image(driver: webdriver.Chrome) -> io.BytesIO | None:

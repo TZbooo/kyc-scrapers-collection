@@ -1,5 +1,5 @@
 import io
-import time
+import uuid
 import itertools
 
 import requests
@@ -8,27 +8,28 @@ from selenium.webdriver.common.by import By
 
 from app.config import logger
 from app.kyc import add_kyc_article
-from bsslib import get_driver, convert_article_parts_to_html
+from app.bsslib import get_driver, convert_article_parts_to_html
 
 
 def get_article_image(driver: webdriver.Chrome) -> io.BytesIO | None:
     try:
         image_url = driver.find_element(By.CLASS_NAME, 'picture__image').get_attribute('src')
         logger.debug(f'{image_url=}')
+
         image = io.BytesIO(requests.get(image_url).content)
+        image.name = f'lenta-ru-{uuid.uuid4().hex}.jpg'
         return image
     except:
         return None
 
 
-def get_article_url_list(archive_page_url_template: str) -> list[str]:
+def get_article_url_list(archive_page_url_template: str, limit: int | None = None) -> list[str]:
     driver = get_driver()
 
     article_url_list = []
     for page in itertools.count(1):
         page_url = archive_page_url_template.format(page=page)
         driver.get(page_url)
-        time.sleep(5)
 
         page_article_url_list = [
             i.get_attribute('href')
@@ -37,6 +38,10 @@ def get_article_url_list(archive_page_url_template: str) -> list[str]:
         if not page_article_url_list:
             break
         article_url_list += page_article_url_list
+
+        if page == limit:
+            break
+
     driver.quit()
     return article_url_list
 
@@ -46,7 +51,8 @@ def scrape_article_page(driver: webdriver.Chrome, url: str):
     date = driver.find_element(
         by=By.CSS_SELECTOR,
         value='.topic-header__item.topic-header__time'
-    ).get_attribute('href')[1:-1].replace('/', '-')
+    ).get_attribute('href')[17:-1].replace('/', '-')
+    logger.debug(f'{date=}')
 
     title = driver.find_element(By.TAG_NAME, 'h1').text
     logger.debug(f'{title=} {url=}')

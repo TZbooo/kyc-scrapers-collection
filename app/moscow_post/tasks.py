@@ -7,13 +7,13 @@ from selenium.common.exceptions import JavascriptException
 
 from app.config import logger, SCRAPING_CONF
 from app.worker import celery
-from bsslib import get_driver
+from app.bsslib import get_driver
 from .services import get_article_url_list, scrape_article_page
 
 
 @celery.on_after_finalize.connect
 def setup_periodic_tasks(sender, **kwargs):
-    sender.add_periodic_task(60 * 20, check_for_new_articles_task.s())
+    sender.add_periodic_task(60 * 20, check_for_new_moscow_post_articles_task.s())
 
 
 @celery.task(name='scrape_moscow_post_articles_chunk_task')
@@ -32,8 +32,8 @@ def scrape_moscow_post_articles_chunk_task(article_url_list: list[str]) -> bool:
     return True
 
 
-@celery.task(name='check_for_new_articles_task')
-def check_for_new_articles_task() -> bool:
+@celery.task(name='check_for_new_moscow_post_articles_task')
+def check_for_new_moscow_post_articles_task() -> bool:
     driver = get_driver()
     try:
         driver.get('http://www.moscow-post.su/all/')
