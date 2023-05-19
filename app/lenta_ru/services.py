@@ -1,29 +1,69 @@
+import io
 import time
+import itertools
 
-from bsslib import get_driver
+import requests
+from selenium import webdriver
+from selenium.webdriver.common.by import By
+
+from app.config import logger
+from app.kyc import add_kyc_article
+from bsslib import get_driver, convert_article_parts_to_html
 
 
-driver = get_driver()
-driver.get('https://lenta.ru/parts/news/')
-print('wait for page load')
-time.sleep(5)
+def get_article_image(driver: webdriver.Chrome) -> io.BytesIO | None:
+    try:
+        image_url = driver.find_element(By.CLASS_NAME, 'picture__image').get_attribute('src')
+        logger.debug(f'{image_url=}')
+        image = io.BytesIO(requests.get(image_url).content)
+        return image
+    except:
+        return None
 
-response = driver.execute_script('''
-return await (await fetch("https://lenta.ru/parts/news/2/?full", {
-    "headers": {
-      "accept": "*/*",
-      "accept-language": "ru-RU,ru;q=0.9,en-US;q=0.8,en;q=0.7",
-      "sec-fetch-dest": "empty",
-      "sec-fetch-mode": "cors",
-      "sec-fetch-site": "same-origin",
-      "x-requested-with": "XMLHttpRequest"
-    },
-    "referrer": "https://lenta.ru/parts/news/",
-    "referrerPolicy": "strict-origin-when-cross-origin",
-    "body": null,
-    "method": "GET",
-    "mode": "cors",
-    "credentials": "include"
-})).json();
-''')
-print(response)
+
+def get_article_url_list(archive_page_url_template: str) -> list[str]:
+    driver = get_driver()
+
+    article_url_list = []
+    for page in itertools.count(1):
+        page_url = archive_page_url_template.format(page=page)
+        driver.get(page_url)
+        time.sleep(5)
+
+        page_article_url_list = [
+            i.get_attribute('href')
+            for i in driver.find_elements(By.CSS_SELECTOR, '.archive-page__item._news a')
+        ]
+        if not page_article_url_list:
+            break
+        article_url_list += page_article_url_list
+    driver.quit()
+    return article_url_list
+
+
+def scrape_article_page(driver: webdriver.Chrome, url: str):
+    driver.get(url)
+    date = driver.find_element(
+        by=By.CSS_SELECTOR,
+        value='.topic-header__item.topic-header__time'
+    ).get_attribute('href')[1:-1].replace('/', '-')
+
+    title = driver.find_element(By.TAG_NAME, 'h1').text
+    logger.debug(f'{title=} {url=}')
+
+    text = driver.find_element(By.CLASS_NAME, 'topic-body__content').text
+    html_text = convert_article_parts_to_html(
+        title=title,
+        sub_title=None,
+        text=text
+    )
+    image = get_article_image(driver)
+
+    add_kyc_article(
+        name=title,
+        description=html_text,
+        date=date,
+        image=image,
+        origin='https://lenta.ru/',
+        source=url
+    )
