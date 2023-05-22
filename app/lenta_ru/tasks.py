@@ -1,6 +1,5 @@
 import time
 import pytz
-import itertools
 from datetime import datetime, timedelta
 
 from app.config import SCRAPING_CONF
@@ -28,12 +27,16 @@ def scrape_lenta_ru_task() -> bool:
     start_scraping_date = datetime(
         year=lenta_ru_conf['year'],
         month=lenta_ru_conf['month'],
-        day=lenta_ru_conf['day']
+        day=lenta_ru_conf['day'],
+        tzinfo=pytz.timezone('Europe/Moscow')
     )
-    for days in itertools.count(0):
-        print(f'{days=}')
+    now_msk = datetime.now(pytz.timezone('Europe/Moscow'))
+    days = (now_msk - start_scraping_date).days
+
+    for day in range(days):
+        print(f'{day=}')
         try:
-            scraping_date = start_scraping_date + timedelta(days=days)
+            scraping_date = start_scraping_date + timedelta(days=day)
             archive_url_template = 'https://lenta.ru/' + scraping_date.strftime('%Y/%m/%d') + '/page/{page}/'
             article_url_list = get_article_url_list(archive_url_template)
             scrape_lenta_ru_articles_chunk(article_url_list)
