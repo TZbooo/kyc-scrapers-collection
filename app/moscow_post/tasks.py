@@ -8,28 +8,12 @@ from selenium.common.exceptions import JavascriptException
 from app.config import logger, SCRAPING_CONF
 from app.worker import celery
 from app.bsslib import get_driver
-from .services import get_article_url_list, scrape_article_page
+from .services import get_article_url_list, scrape_moscow_post_articles_chunk
 
 
 @celery.on_after_finalize.connect
 def setup_periodic_tasks(sender, **kwargs):
     sender.add_periodic_task(60 * 20, check_for_new_moscow_post_articles_task.s())
-
-
-@celery.task(name='scrape_moscow_post_articles_chunk_task')
-def scrape_moscow_post_articles_chunk_task(article_url_list: list[str]) -> bool:
-    driver = get_driver()
-
-    try:
-        for article_url in article_url_list:
-            logger.info(f'start scraping {article_url}')
-            scrape_article_page(
-                driver=driver,
-                url=article_url
-            )
-    finally:
-        driver.quit()
-    return True
 
 
 @celery.task(name='check_for_new_moscow_post_articles_task')
@@ -46,7 +30,7 @@ def check_for_new_moscow_post_articles_task() -> bool:
             reverse=False,
             limit=2
         )
-        scrape_moscow_post_articles_chunk_task.apply_async(kwargs={'article_url_list': article_url_list})
+        scrape_moscow_post_articles_chunk(article_url_list)
         logger.info('new articles was checked')
     finally:
         driver.quit()
@@ -87,8 +71,7 @@ def scrape_moscow_post_task() -> bool:
         if not article_url_list:
             break
 
-        scrape_moscow_post_articles_chunk_task.apply_async(kwargs={'article_url_list': article_url_list})
-        time.sleep(30)
+        scrape_moscow_post_articles_chunk(article_url_list)
 
     driver.quit()
     return True

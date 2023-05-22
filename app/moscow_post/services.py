@@ -10,7 +10,7 @@ from selenium.common.exceptions import NoSuchElementException
 
 from app.config import logger
 from app.kyc import add_kyc_article
-from app.bsslib import convert_article_parts_to_html
+from app.bsslib import get_driver, convert_article_parts_to_html
 
 
 def get_article_image(driver: webdriver.Chrome) -> io.BytesIO | None:
@@ -87,3 +87,16 @@ def scrape_article_page(driver: webdriver.Chrome, url: str):
         origin='http://www.moscow-post.su/',
         source=url
     )
+
+
+def scrape_moscow_post_articles_chunk(article_url_list: list[str]):
+    driver = get_driver()
+    try:
+        for article_url in article_url_list:
+            logger.info(f'start scraping {article_url}')
+            scrape_article_page(
+                driver=driver,
+                url=article_url
+            )
+    finally:
+        driver.quit()

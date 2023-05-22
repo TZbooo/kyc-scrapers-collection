@@ -16,7 +16,11 @@ def get_article_image(driver: webdriver.Chrome) -> io.BytesIO | None:
         image_url = driver.find_element(By.CLASS_NAME, 'picture__image').get_attribute('src')
         logger.debug(f'{image_url=}')
 
-        image = io.BytesIO(requests.get(image_url).content)
+        response = requests.get(image_url)
+        if not response.ok:
+            return None
+
+        image = io.BytesIO(response.content)
         image.name = f'lenta-ru-{uuid.uuid4().hex}.jpg'
         return image
     except:
@@ -30,6 +34,7 @@ def get_article_url_list(archive_page_url_template: str, limit: int | None = Non
     for page in itertools.count(1):
         page_url = archive_page_url_template.format(page=page)
         driver.get(page_url)
+        logger.debug(page_url)
 
         page_article_url_list = [
             i.get_attribute('href')
@@ -43,6 +48,8 @@ def get_article_url_list(archive_page_url_template: str, limit: int | None = Non
             break
 
     driver.quit()
+
+    logger.debug(f'{article_url_list=}')
     return article_url_list
 
 
@@ -73,3 +80,16 @@ def scrape_article_page(driver: webdriver.Chrome, url: str):
         origin='https://lenta.ru/',
         source=url
     )
+
+
+def scrape_lenta_ru_articles_chunk(article_url_list: list[str]):
+    driver = get_driver()
+    try:
+        for article_url in article_url_list:
+            scrape_article_page(
+                driver=driver,
+                url=article_url
+            )
+    finally:
+        driver.quit()
+        
