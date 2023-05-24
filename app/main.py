@@ -2,6 +2,7 @@ from typing import Generator
 
 from app.config import logger, SCRAPING_CONF
 from app.moscow_post.tasks import scrape_moscow_post_task
+from app.washington_post.tasks import scrape_washington_post_task
 from app.telegram_channel.tasks import scrape_telegram_channel_task, listen_for_new_channels_messages
 
 
