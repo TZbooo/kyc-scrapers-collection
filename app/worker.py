@@ -13,5 +13,6 @@ celery.conf.result_backend = CELERY_RESULT_BACKEND
 celery.autodiscover_tasks([
     'app.telegram_channel',
     'app.moscow_post',
+    'app.lenta_ru',
     'app.washington_post'
 ])

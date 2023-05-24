@@ -7,28 +7,10 @@ from datetime import datetime
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.common.exceptions import NoSuchElementException
-from selenium.webdriver.chrome.service import Service as ChromeService
-from webdriver_manager.chrome import ChromeDriverManager
 
-from app.config import logger, PROXY_CYCLE
+from app.config import logger
 from app.kyc import add_kyc_article
-
-
-def get_driver() -> webdriver.Chrome:
-    options = webdriver.ChromeOptions()
-    options.add_argument('--headless')
-    options.add_argument('--no-sandbox')
-    options.add_argument('--disable-dev-shm-usage')
-
-    proxy = next(PROXY_CYCLE)
-    logger.info(f'current {proxy=}')
-
-    driver = webdriver.Chrome(
-        service=ChromeService(ChromeDriverManager().install()),
-        options=options
-    )
-    driver.implicitly_wait(120)
-    return driver
+from app.bsslib import get_driver, convert_article_parts_to_html
 
 
 def get_article_image(driver: webdriver.Chrome) -> io.BytesIO | None:
@@ -71,21 +53,6 @@ def get_article_url_list(driver: webdriver.Chrome, page: int, reverse: bool = Tr
     return article_url_list
 
 
-def convert_article_parts_to_html(
-    title: str,
-    sub_title: str | None,
-    text: str
-) -> str:
-    article_text = f'<h1>{title}</h1>'
-    if sub_title:
-        article_text += f'<h2>{sub_title}</h2>'
-
-    text = re.sub(r'\n{2,}', '\n', text.strip()).split('\n')
-    for paragraph in text:
-        article_text += f'<p>{paragraph}</p>'
-    return article_text
-
-
 def scrape_article_page(driver: webdriver.Chrome, url: str):
     driver.get(url)
     logger.info('page was loaded')
@@ -105,12 +72,12 @@ def scrape_article_page(driver: webdriver.Chrome, url: str):
         sub_title = None
 
     text = driver.find_element(By.CLASS_NAME, 'article-text').text
-    image = get_article_image(driver)
     html_text = convert_article_parts_to_html(
         title=title,
         sub_title=sub_title,
         text=text
     )
+    image = get_article_image(driver)
 
     add_kyc_article(
         name=title,
@@ -120,3 +87,16 @@ def scrape_article_page(driver: webdriver.Chrome, url: str):
         origin='http://www.moscow-post.su/',
         source=url
     )
+
+
+def scrape_moscow_post_articles_chunk(article_url_list: list[str]):
+    driver = get_driver()
+    try:
+        for article_url in article_url_list:
+            logger.info(f'start scraping {article_url}')
+            scrape_article_page(
+                driver=driver,
+                url=article_url
+            )
+    finally:
+        driver.quit()

@@ -116,6 +116,7 @@ ipython_config.py
 __pypackages__/
 
 # Celery stuff
+core
 celerybeat-schedule
 celerybeat.pid
 

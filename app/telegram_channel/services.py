@@ -136,11 +136,15 @@ async def scrape_message_async(
     article_date = message.date.strftime('%Y-%m-%d')
     image = await get_message_image_async(message)
 
+    origin = f'https://t.me/{channel.username}/'
+    source = f'{origin}{message.id}/'
+
+    logger.info(f'start article adding {message.id=}')
     add_kyc_article(
         name=name,
         description=description,
         date=article_date,
         image=image,
-        message=message,
-        channel=channel
+        origin=origin,
+        source=source
     )

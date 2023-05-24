@@ -6,7 +6,7 @@ import itertools
 from loguru import logger
 
 
-logger.add('logs.log', rotation='1 day')
+logger.add('log_{time}.log', rotation='1 week', compression='zip')
 
 BASE_DIR = pathlib.Path(__file__).parent.parent.absolute()
 
