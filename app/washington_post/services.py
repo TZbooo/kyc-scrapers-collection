@@ -1,11 +1,23 @@
 import io
 import uuid
+import enum
 from datetime import datetime
 
 import requests
 from selenium import webdriver
 
+from app.config import logger
 from app.kyc import add_kyc_article
+from app.bsslib import get_driver
+
+
+@enum.unique
+class ArticleCategories(enum.Enum):
+    world = 1
+    politics = 2
+    investigations = 3
+    technology = 4
+    lifestyle = 5
 
 
 def convert_article_parts_to_html(title: str, article_parts: list[dict]) -> str:
@@ -39,7 +51,7 @@ def scrape_article_item(article_item: dict):
     article_url = article_item['canonical_url']
     title = article_item['additional_properties']['page_title'].replace(' - The Washington Post', '')
     date = datetime.fromisoformat(
-        article_item['additional_properties']['publish_date'][:-1]
+        article_item['created_date'][:-1]
     ).strftime('%Y-%m-%d')
 
     image = None
@@ -57,25 +69,68 @@ def scrape_article_item(article_item: dict):
         name=title,
         description=html_text,
         date=date,
+        image=image,
         origin='https://www.washingtonpost.com/',
         source=article_url
     )
 
-    print(f'''
-    {article_url=}
-    {date=}
-    {title=}
-    {image_url=}
-    {html_text=}
+    logger.debug(f'''
+{article_url=}
+{date=}
+{title=}
+{image=}
+{html_text=}
     ''')
 
 
-def get_washington_post_articles(driver: webdriver.Chrome, offset: int, limit: int) -> dict:
+def scrape_all_artciles_from_category(
+    articles_count: int,
+    category: ArticleCategories,
+    limit: int | None = None
+):
+    driver = get_driver()
+    driver.get(f'https://www.washingtonpost.com/{category.name}/?itid=nb_{category.name}')
+
+    for i, offset in enumerate(range(0, articles_count + 20, 20)):
+        if i == limit:
+            break
+
+        logger.debug(f'offset={offset} limit={offset + 20}')
+        articles = get_washington_post_articles(
+            driver=driver,
+            category=category,
+            offset=offset,
+            limit=offset + 20
+        )
+
+        for article_item in articles['items']:
+            scrape_article_item(article_item)
+        
+        if i % 40:
+            driver = get_driver()
+            driver.get(f'https://www.washingtonpost.com/{category.name}/?itid=nb_{category.name}')
+
+
+
+def get_washington_post_articles(
+    driver: webdriver.Chrome,
+    category: ArticleCategories,
+    offset: int,
+    limit: int
+) -> dict:
+    if category.name != 'investigations':
+        return driver.execute_script(f'''
+        return await (await fetch("https://www.washingtonpost.com/prism/api/prism-query?_website=washpost&query=%7B%22query%22%3A%22prism%3A%2F%2Fprism.query%2Fsite-articles-only%2C%2F{category.name}%2F%26offset%3D{offset}%26limit%3D{limit}%22%7D", {{
+            "referrer": "https://www.washingtonpost.com/{category.name}/?itid=nb_{category.name}",
+            "referrerPolicy": "strict-origin-when-cross-origin",
+            "mode": "cors",
+            "credentials": "include"
+        }})).json();
+        ''')
     return driver.execute_script(f'''
-    return await (await fetch("https://www.washingtonpost.com/prism/api/prism-query?_website=washpost&query=%7B%22query%22%3A%22prism%3A%2F%2Fprism.query%2Fsite-articles-only%2C%2Fworld%2F%26offset%3D{offset}%26limit%3D{limit}%22%7D", {{
-        "referrer": "https://www.washingtonpost.com/world/?itid=nb_world",
+    return await (await fetch("https://www.washingtonpost.com/prism/api/prism-query?_website=washpost&query=%7B%22query%22%3A%22prism%3A%2F%2Fprism.query%2Fsite%2C%2Fnational%2Finvestigations%26offset%3D{offset}%26limit%3D{limit}%22%7D", {{
+        "referrer": "https://www.washingtonpost.com/national/investigations/?itid=nb_investigations",
         "referrerPolicy": "strict-origin-when-cross-origin",
-        "method": "GET",
         "mode": "cors",
         "credentials": "include"
     }})).json();

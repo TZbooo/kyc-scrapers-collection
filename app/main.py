@@ -1,6 +1,6 @@
 from app.config import logger, SCRAPING_CONF
 from app.moscow_post.tasks import scrape_moscow_post_task
-from app.washington_post.tasks import scrape_washington_post_task
+from app.washington_post.tasks import scrape_washington_post_task, check_for_new_washington_post_articles_task
 from app.lenta_ru.tasks import scrape_lenta_ru_task, check_for_new_lenta_ru_articles_task
 from app.telegram_channel.tasks import scrape_telegram_channel_task, listen_for_new_channels_messages
 
@@ -47,4 +47,11 @@ if __name__ == '__main__':
 
         while not scrape_lenta_ru_task_result.ready():
             continue
-        check_for_new_lenta_ru_articles_task.apply_async()
+        check_for_new_lenta_ru_articles_task.apply_async(queue='periodic')
+    if SCRAPING_CONF['washington_post']['run_scraper']:
+        logger.info('start washingtonpost.com scraper')
+        scrape_washington_post_task_result = scrape_washington_post_task.apply_async(queue='regular')
+
+        while not scrape_washington_post_task_result.ready():
+            continue
+        check_for_new_washington_post_articles_task.apply_async(queue='periodic')

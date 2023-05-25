@@ -11,7 +11,7 @@ from .services import (
 
 
 @celery.task(name='check_for_new_lenta_ru_articles_task')
-def check_for_new_lenta_ru_articles_task() -> bool:
+def check_for_new_lenta_ru_articles_task():
     while True:
         now_msk = datetime.now(pytz.timezone('Europe/Moscow')).strftime('%Y/%m/%d')
         archive_page_url_template = 'https://lenta.ru/' + now_msk + '/page/{page}/'
