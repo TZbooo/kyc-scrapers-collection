@@ -10,6 +10,14 @@ from .services import (
 )
 
 
+@celery.on_after_finalize.connect
+def setup_periodic_tasks(sender, **kwargs):
+    sender.add_periodic(
+        schedule=60 * 20,
+        sig=check_for_new_lenta_ru_articles_task.s().set(queue='periodic')
+    )
+
+
 @celery.task(name='check_for_new_lenta_ru_articles_task')
 def check_for_new_lenta_ru_articles_task():
     while True:

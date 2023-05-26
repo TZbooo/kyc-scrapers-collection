@@ -1,6 +1,6 @@
 import time
 
-from app.config import logger
+from app.config import logger, SCRAPING_CONF
 from app.worker import celery
 from app.bsslib import get_driver
 from .services import (
@@ -8,6 +8,14 @@ from .services import (
     get_washington_post_articles,
     scrape_all_artciles_from_category
 )
+
+
+@celery.on_after_finalize.connect
+def setup_periodic_tasks(sender, **kwargs):
+    sender.add_periodic_task(
+        schedule=60 * 30,
+        sig=check_for_new_washington_post_articles_task.s().set(queue='periodic')
+    )
 
 
 @celery.task(name='check_for_new_washington_post_articles_task')
@@ -33,9 +41,15 @@ def check_for_new_washington_post_articles_task():
 
 @celery.task(name='scrape_washington_post_task')
 def scrape_washington_post_task() -> bool:
+    categories_settings = SCRAPING_CONF['washington_post']['categories_settings']
     driver = get_driver()
 
     for category in ArticleCategories:
+        logger.info(f'start scraping {category.name} category')
+        if categories_settings[category.name]['skip']:
+            logger.info(f'category {category.name} skip')
+            continue
+
         driver.get(f'https://www.washingtonpost.com/{category.name}/?itid=nb_{category.name}')
         articles_count = get_washington_post_articles(
             driver=driver,
@@ -45,6 +59,7 @@ def scrape_washington_post_task() -> bool:
         )['count']
         scrape_all_artciles_from_category(
             articles_count=articles_count,
-            category=category
+            category=category,
+            offset=categories_settings[category.name]['offset']
         )
     return True

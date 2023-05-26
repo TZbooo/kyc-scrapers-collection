@@ -79,34 +79,35 @@ def scrape_article_item(article_item: dict):
 {date=}
 {title=}
 {image=}
-{html_text=}
     ''')
 
 
 def scrape_all_artciles_from_category(
     articles_count: int,
     category: ArticleCategories,
-    limit: int | None = None
+    limit: int | None = None,
+    offset: int = 0
 ):
     driver = get_driver()
     driver.get(f'https://www.washingtonpost.com/{category.name}/?itid=nb_{category.name}')
 
-    for i, offset in enumerate(range(0, articles_count + 20, 20)):
+    step = 20
+    for i, offset in enumerate(range(offset, articles_count + step, step)):
         if i == limit:
             break
 
-        logger.debug(f'offset={offset} limit={offset + 20}')
+        logger.debug(f'{i=} offset={offset} limit={offset + step}')
         articles = get_washington_post_articles(
             driver=driver,
             category=category,
             offset=offset,
-            limit=offset + 20
+            limit=offset + step
         )
 
         for article_item in articles['items']:
             scrape_article_item(article_item)
         
-        if i % 40:
+        if not offset % (step * 2):
             driver = get_driver()
             driver.get(f'https://www.washingtonpost.com/{category.name}/?itid=nb_{category.name}')
 

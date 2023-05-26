@@ -106,7 +106,7 @@ def scrape_message(
     origin = f'https://t.me/{channel.username}/'
     source = f'{origin}{message.id}/'
 
-    logger.info(f'start article adding {message.id=}')
+    logger.info(f'{name=} {article_date=} {source=}')
     add_kyc_article(
         name=name,
         description=description,
@@ -117,7 +117,6 @@ def scrape_message(
     )
 
 
-@logger.catch
 async def scrape_message_async(
     min_characters: int,
     message: types.Message,
@@ -139,7 +138,7 @@ async def scrape_message_async(
     origin = f'https://t.me/{channel.username}/'
     source = f'{origin}{message.id}/'
 
-    logger.info(f'start article adding {message.id=}')
+    logger.info(f'{name=} {article_date=} {source=}')
     add_kyc_article(
         name=name,
         description=description,

@@ -1,3 +1,5 @@
+import time
+
 from app.config import logger, SCRAPING_CONF
 from app.moscow_post.tasks import scrape_moscow_post_task
 from app.washington_post.tasks import scrape_washington_post_task, check_for_new_washington_post_articles_task
@@ -44,14 +46,6 @@ if __name__ == '__main__':
     if SCRAPING_CONF['lenta_ru']['run_scraper']:
         logger.info('start lenta.ru scraper')
         scrape_lenta_ru_task_result = scrape_lenta_ru_task.apply_async(queue='regular')
-
-        while not scrape_lenta_ru_task_result.ready():
-            continue
-        check_for_new_lenta_ru_articles_task.apply_async(queue='periodic')
     if SCRAPING_CONF['washington_post']['run_scraper']:
         logger.info('start washingtonpost.com scraper')
         scrape_washington_post_task_result = scrape_washington_post_task.apply_async(queue='regular')
-
-        while not scrape_washington_post_task_result.ready():
-            continue
-        check_for_new_washington_post_articles_task.apply_async(queue='periodic')
