@@ -5,7 +5,7 @@ from datetime import datetime
 import requests
 from bs4 import BeautifulSoup
 
-from scraper.config import logger
+from scraper.config import logger, BLOCK_BYPASS_PROXY
 from scraper.kyc import add_kyc_article
 
 
@@ -53,16 +53,20 @@ headers = {
     'x-requested-with': 'XMLHttpRequest',
 }
 
+proxies = {
+    'http': BLOCK_BYPASS_PROXY,
+    'https': BLOCK_BYPASS_PROXY
+}
+
 
 def convert_article_parts_to_html(title: str, soup: BeautifulSoup) -> str:
     html_text = f'<h1>{title}</h1>'
     article_block_list = soup.select_one('.article__content .article__block--html')
 
     for article_block in article_block_list:
-        if not str(article_block).strip():
+        if not article_block.text.strip():
             continue
         html_text += str(article_block).strip()
-        html_text += '<br/>'
     return html_text
 
 
@@ -72,7 +76,8 @@ def get_article_url_list(page: int) -> list[str]:
     html = requests.get(
         f'https://www.themoscowtimes.com/news/{1 + 18 * page}',
         cookies=cookies,
-        headers=headers
+        headers=headers,
+        proxies=proxies
     ).text
     soup = BeautifulSoup(html, 'html.parser')
 
@@ -83,17 +88,18 @@ def scrape_article_page(url: str):
     html = requests.get(
         url,
         cookies=cookies,
-        headers=headers
+        headers=headers,
+        proxies=proxies
     ).text
     soup = BeautifulSoup(html, 'html.parser')
 
-    title = soup.select_one('meta[property="og:title"]')['content']
+    title = soup.select_one('meta[property="og:title"]')['content'].replace(' - The Moscow Times', '')
     date = datetime.fromisoformat(
         soup.select_one('meta[property="article:published_time"]')['content']
     ).strftime('%Y-%m-%d')
 
     image_url = soup.select_one('meta[property="og:image"]')['content']
-    image = io.BytesIO(requests.get(image_url).content)
+    image = io.BytesIO(requests.get(image_url, proxies=proxies).content)
     image.name = f'themoscowtimes-{uuid.uuid4().hex}.jpg'
 
     html_text = convert_article_parts_to_html(

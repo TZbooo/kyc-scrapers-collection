@@ -1,5 +1,3 @@
-import time
-
 from scraper.config import logger, SCRAPING_CONF
 from scraper.worker import celery
 from scraper.bsslib import get_driver

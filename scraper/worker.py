@@ -11,8 +11,9 @@ celery.control.purge()
 celery.conf.broker_url = CELERY_BROKER_URL
 celery.conf.result_backend = CELERY_RESULT_BACKEND
 celery.autodiscover_tasks([
-    'app.telegram_channel',
-    'app.moscow_post',
-    'app.lenta_ru',
-    'app.washington_post'
+    'scraper.telegram_channel',
+    'scraper.moscow_post',
+    'scraper.lenta_ru',
+    'scraper.washington_post',
+    'scraper.themoscowtimes'
 ])
