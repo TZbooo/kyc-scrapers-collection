@@ -1,6 +1,7 @@
 from scraper.config import logger, SCRAPING_CONF
 from scraper.moscow_post.tasks import scrape_moscow_post_task
 from scraper.washington_post.tasks import scrape_washington_post_task
+from scraper.themoscowtimes.tasks import scrape_themoscowpost_task
 from scraper.lenta_ru.tasks import scrape_lenta_ru_task
 from scraper.telegram_channel.tasks import scrape_telegram_channel_task, listen_for_new_channels_messages
 
@@ -47,7 +48,9 @@ def run_scraping_tasks():
     if SCRAPING_CONF['washington_post']['run_scraper']:
         logger.info('start washingtonpost.com scraper')
         scrape_washington_post_task.apply_async(queue='regular')
-
+    if SCRAPING_CONF['themoscowtimes']['run_scraper']:
+        logger.info('start themoscowtimes.com scraper')
+        scrape_themoscowpost_task.apply_async(queue='regular')
 
 if __name__ == '__main__':
     run_scraping_tasks()
