@@ -6,9 +6,9 @@ import requests
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 
-from app.config import logger
-from app.kyc import add_kyc_article
-from app.bsslib import get_driver, convert_article_parts_to_html
+from scraper.config import logger
+from scraper.kyc import add_kyc_article
+from scraper.bsslib import get_driver, convert_article_parts_to_html
 
 
 def get_article_image(driver: webdriver.Chrome) -> io.BytesIO | None:

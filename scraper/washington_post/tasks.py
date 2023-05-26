@@ -1,8 +1,8 @@
 import time
 
-from app.config import logger, SCRAPING_CONF
-from app.worker import celery
-from app.bsslib import get_driver
+from scraper.config import logger, SCRAPING_CONF
+from scraper.worker import celery
+from scraper.bsslib import get_driver
 from .services import (
     ArticleCategories,
     get_washington_post_articles,

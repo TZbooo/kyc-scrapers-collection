@@ -3,7 +3,7 @@ version: '3'
 services:
   scraper:
     build: .
-    command: python -m app.main
+    command: python -m scraper.run
     env_file:
       - .env
     volumes:
@@ -13,7 +13,7 @@ services:
 
   worker:
     build: .
-    command: celery -A app.worker.celery worker -c 10 -B --loglevel=INFO -Q periodic,regular
+    command: celery -A scraper.worker.celery worker -c 10 -B --loglevel=INFO -Q periodic,regular
     env_file:
       - .env
     volumes:

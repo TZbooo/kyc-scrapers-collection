@@ -5,9 +5,9 @@ from datetime import datetime
 
 from selenium.common.exceptions import JavascriptException
 
-from app.config import logger, SCRAPING_CONF
-from app.worker import celery
-from app.bsslib import get_driver
+from scraper.config import logger, SCRAPING_CONF
+from scraper.worker import celery
+from scraper.bsslib import get_driver
 from .services import get_article_url_list, scrape_moscow_post_articles_chunk
 
 

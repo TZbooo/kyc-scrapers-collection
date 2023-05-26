@@ -6,9 +6,9 @@ from datetime import datetime
 import requests
 from selenium import webdriver
 
-from app.config import logger
-from app.kyc import add_kyc_article
-from app.bsslib import get_driver
+from scraper.config import logger
+from scraper.kyc import add_kyc_article
+from scraper.bsslib import get_driver
 
 
 @enum.unique
