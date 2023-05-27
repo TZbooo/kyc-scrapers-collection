@@ -1,10 +1,10 @@
+import time
 import io
 import uuid
 import enum
 from datetime import datetime
 
 import requests
-from selenium import webdriver
 
 from scraper.config import logger
 from scraper.kyc import add_kyc_article
@@ -88,51 +88,46 @@ def scrape_all_artciles_from_category(
     limit: int | None = None,
     offset: int = 0
 ):
-    driver = get_driver()
-    driver.get(f'https://www.washingtonpost.com/{category.name}/?itid=nb_{category.name}')
-
     step = 20
     for i, offset in enumerate(range(offset, articles_count + step, step)):
         if i == limit:
             break
 
         logger.debug(f'{i=} offset={offset} limit={offset + step}')
-        articles = get_washington_post_articles(
-            driver=driver,
-            category=category,
-            offset=offset,
-            limit=offset + step
-        )
+        try:
+            articles = get_washington_post_articles(
+                category=category,
+                offset=offset,
+                limit=offset + step
+            )
+        except Exception as e:
+            logger.error(e)
+            continue
 
         for article_item in articles['items']:
-            scrape_article_item(article_item)
+            try:
+                scrape_article_item(article_item)
+            except Exception as e:
+                logger.error(e)
         
-        if not offset % (step * 2):
-            driver = get_driver()
-            driver.get(f'https://www.washingtonpost.com/{category.name}/?itid=nb_{category.name}')
+        time.sleep(2)
 
 
 
 def get_washington_post_articles(
-    driver: webdriver.Chrome,
     category: ArticleCategories,
     offset: int,
     limit: int
 ) -> dict:
-    if category.name != 'investigations':
-        return driver.execute_script(f'''
-        return await (await fetch("https://www.washingtonpost.com/prism/api/prism-query?_website=washpost&query=%7B%22query%22%3A%22prism%3A%2F%2Fprism.query%2Fsite-articles-only%2C%2F{category.name}%2F%26offset%3D{offset}%26limit%3D{limit}%22%7D", {{
-            "referrer": "https://www.washingtonpost.com/{category.name}/?itid=nb_{category.name}",
-            "referrerPolicy": "strict-origin-when-cross-origin",
-            "mode": "cors",
-            "credentials": "include"
-        }})).json();
-        ''')
-    return driver.execute_script(f'''
-    return await (await fetch("https://www.washingtonpost.com/prism/api/prism-query?_website=washpost&query=%7B%22query%22%3A%22prism%3A%2F%2Fprism.query%2Fsite%2C%2Fnational%2Finvestigations%26offset%3D{offset}%26limit%3D{limit}%22%7D", {{
-        "referrer": "https://www.washingtonpost.com/national/investigations/?itid=nb_investigations",
-        "referrerPolicy": "strict-origin-when-cross-origin",
-        "mode": "cors",
-        "credentials": "include"
-    }})).json();
-    ''')
+    params = {
+        '_website': 'washpost',
+        'query': f'{{"query":"prism://prism.query/site-articles-only,/{category.name}&offset={offset}&limit={limit}"}}',
+    }
+    if category.name == 'investigations':
+        params = {
+            '_website': 'washpost',
+            'query': f'{{"query":"prism://prism.query/site,/national/{category.name}&offset={offset}&limit={limit}"}}',
+        }
+
+    response = requests.get('https://www.washingtonpost.com/prism/api/prism-query', params=params)
+    return response.json()

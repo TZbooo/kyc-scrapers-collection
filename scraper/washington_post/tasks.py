@@ -23,11 +23,11 @@ def check_for_new_washington_post_articles_task():
         logger.info(f'category={category.name}')
         driver.get(f'https://www.washingtonpost.com/{category.name}/?itid=nb_{category.name}')
         articles_count = get_washington_post_articles(
-            driver=driver,
             category=category,
             offset=0,
             limit=1
         )['count']
+        logger.info(f'{category.name} articles count is {articles_count}')
         scrape_all_artciles_from_category(
             articles_count=articles_count,
             category=category,
@@ -41,21 +41,23 @@ def scrape_washington_post_task() -> bool:
     driver = get_driver()
 
     for category in ArticleCategories:
-        logger.info(f'start scraping {category.name} category')
-        if categories_settings[category.name]['skip']:
-            logger.info(f'category {category.name} skip')
-            continue
+        try:
+            logger.info(f'start scraping {category.name} category')
+            if categories_settings[category.name]['skip']:
+                logger.info(f'category {category.name} skip')
+                continue
 
-        driver.get(f'https://www.washingtonpost.com/{category.name}/?itid=nb_{category.name}')
-        articles_count = get_washington_post_articles(
-            driver=driver,
-            category=category,
-            offset=0,
-            limit=1
-        )['count']
-        scrape_all_artciles_from_category(
-            articles_count=articles_count,
-            category=category,
-            offset=categories_settings[category.name]['offset']
-        )
+            driver.get(f'https://www.washingtonpost.com/{category.name}/?itid=nb_{category.name}')
+            articles_count = get_washington_post_articles(
+                category=category,
+                offset=0,
+                limit=1
+            )['count']
+            scrape_all_artciles_from_category(
+                articles_count=articles_count,
+                category=category,
+                offset=categories_settings[category.name]['offset']
+            )
+        except Exception as e:
+            logger.error(e)
     return True

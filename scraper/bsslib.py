@@ -15,7 +15,7 @@ def get_driver() -> webdriver.Chrome:
         options=options
     )
     driver.implicitly_wait(30)
-    driver.set_script_timeout(30)
+    driver.set_script_timeout(120)
     return driver
 
 
