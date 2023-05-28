@@ -23,3 +23,9 @@ CELERY_BROKER_URL = os.environ['CELERY_BROKER_URL']
 CELERY_RESULT_BACKEND = os.environ['CELERY_RESULT_BACKEND']
 
 BLOCK_BYPASS_PROXY = 'http://netbiom:golangvimo1qaz2wsx1AZ@185.213.208.247:3128'
+
+PROXY_CYCLE = itertools.cycle([
+    'http://SOGBee:d25Hs5A@188.191.164.19:9078',
+    'http://SOGMeg:rTd57fsDh@188.191.164.19:9005',
+    'http://SOGMTS:gF56k2S@goldproxy2.linkpc.net:1109'
+])

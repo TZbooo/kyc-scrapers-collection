@@ -15,5 +15,6 @@ celery.autodiscover_tasks([
     'scraper.moscow_post',
     'scraper.lenta_ru',
     'scraper.washington_post',
-    'scraper.themoscowtimes'
+    'scraper.themoscowtimes',
+    'scraper.compromat'
 ])

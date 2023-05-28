@@ -39,9 +39,6 @@ def check_for_new_moscow_post_articles_task() -> bool:
 
 @celery.task(name='scrape_moscow_post_task')
 def scrape_moscow_post_task() -> bool:
-    now_msk = datetime.now(pytz.timezone('Europe/Moscow')).strftime('%d.%m.%Y')
-    logger.trace(f'current date in moscow {now_msk}')
-
     driver = get_driver()
     driver.get('http://www.moscow-post.su/all/')
     logger.info('wait for page load')

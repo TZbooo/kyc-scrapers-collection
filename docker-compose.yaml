@@ -13,7 +13,7 @@ services:
 
   worker:
     build: .
-    command: celery -A scraper.worker.celery worker -c 10 -B --loglevel=INFO -Q periodic,regular
+    command: celery -A scraper.worker.celery worker -c 10 --loglevel=INFO -Q periodic,regular
     env_file:
       - .env
     volumes:

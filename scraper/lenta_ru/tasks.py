@@ -39,9 +39,9 @@ def scrape_lenta_ru_task() -> bool:
         tzinfo=pytz.timezone('Europe/Moscow')
     )
     now_msk = datetime.now(pytz.timezone('Europe/Moscow'))
-    days = (now_msk - start_scraping_date).days
+    day_count = (now_msk - start_scraping_date).days
 
-    for day in range(days):
+    for day in range(day_count):
         print(f'{day=}')
         try:
             scraping_date = start_scraping_date + timedelta(days=day)
