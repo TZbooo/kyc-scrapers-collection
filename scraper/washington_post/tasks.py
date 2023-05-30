@@ -2,7 +2,6 @@ from scraper.config import logger, SCRAPING_CONF
 from scraper.worker import celery
 from .services import (
     ArticleCategories,
-    get_washington_post_articles,
     scrape_all_artciles_from_category
 )
 
@@ -20,14 +19,7 @@ def check_for_new_washington_post_articles_task():
     for category in ArticleCategories:
         logger.info(f'category={category.name}')
 
-        articles_count = get_washington_post_articles(
-            category=category,
-            offset=0,
-            limit=1
-        )['count']
-        logger.info(f'{category.name} articles count is {articles_count}')
         scrape_all_artciles_from_category(
-            articles_count=articles_count,
             category=category,
             chunks_limit=1
         )
@@ -42,15 +34,8 @@ def scrape_washington_post_task() -> bool:
         if categories_settings[category.name]['skip']:
             logger.info(f'category {category.name} skip')
             continue
-
-        articles_count = get_washington_post_articles(
-            category=category,
-            offset=0,
-            limit=1
-        )['count']
-
+                
         scrape_all_artciles_from_category(
-            articles_count=articles_count,
             category=category,
             offset=categories_settings[category.name]['offset']
         )

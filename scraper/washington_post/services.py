@@ -76,21 +76,24 @@ def scrape_article_item(article_item: dict):
 
 
 def scrape_all_artciles_from_category(
-    articles_count: int,
     category: ArticleCategories,
     chunks_limit: int | None = None,
     offset: int = 0
 ):
     step = 20
-    for i, offset in enumerate(range(offset, articles_count + step, step)):
+    for i, offset in enumerate(range(offset, 9981 + step, step)):
         if i == chunks_limit:
             break
 
-        logger.debug(f'{i=} offset={offset}')
-        articles = get_washington_post_articles(
-            category=category,
-            offset=offset
-        )
+        logger.debug(f'{i=} {offset=}')
+        try:
+            articles = get_washington_post_articles(
+                category=category,
+                offset=offset
+            )
+        except Exception as e:
+            logger.error(e)
+            continue
 
         logger.debug('articles count ', len(articles['items']))
         for article_item in articles['items']:
@@ -98,6 +101,7 @@ def scrape_all_artciles_from_category(
                 scrape_article_item(article_item)
             except Exception as e:
                 logger.error(e)
+                continue
 
 
 def get_washington_post_articles(
