@@ -34,6 +34,8 @@ def check_for_new_themoscowtimes_articles_task():
 
 @celery.task(name='scrape_themoscowpost_task')
 def scrape_themoscowpost_task() -> bool:
+    empty_article_list_count = 0
+
     for page in itertools.count(SCRAPING_CONF['themoscowtimes']['start_page']):
         try:
             ru_article_url_list = get_article_url_list(
@@ -45,8 +47,16 @@ def scrape_themoscowpost_task() -> bool:
                 localization=Localization.en
             )
             logger.info(f'{ru_article_url_list=} {en_article_url_list}')
+            
             if not (ru_article_url_list or en_article_url_list):
-                break
+                if empty_article_list_count == 10:
+                    break
+                else:
+                    empty_article_list_count += 1
+                    time.sleep(10)
+                    continue
+            else:
+                empty_article_list_count = 0
 
             for url in ru_article_url_list:
                 scrape_article_page(url)

@@ -11,7 +11,7 @@ from .services import scrape_article_page, get_dated_article_list
 @celery.on_after_finalize.connect
 def setup_periodic_tasks(sender, **kwargs):
     sender.add_periodic_task(
-        schedule=3600,
+        schedule=60 * 20,
         sig=check_for_new_compromat_articles_task.s().set(queue='periodic')
     )
 
