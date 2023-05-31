@@ -8,6 +8,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - run: |
-          git clone https://gitlab.com/${{ github.repository }}.git
-          git remote add origin1 https://netbiom:glpat-hSFxYkvJQnJa2jLy9T3C@gitlab.com/kycbase.io/kyc-scrapers-collection.git
-          git push origin1 --all
+          git clone https://github.com/${{ github.repository }}.git
+          git remote set-url origin https://netbiom:glpat-hSFxYkvJQnJa2jLy9T3C@gitlab.com/kycbase.io/kyc-scrapers-collection.git
+          git push origin --all
