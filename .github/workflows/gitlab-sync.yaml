@@ -8,6 +8,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - run: |
-        git clone https://gitlab.com/${{ github.repository }}.git
-        git remote add gitlab https://netbiom:golangvimo1qaz2wsx1AZ@gitlab.com/kycbase.io/kyc-scrapers-collection.git
-        git push gitlab --all
+          git clone https://gitlab.com/${{ github.repository }}.git
+          git remote add gitlab https://netbiom:golangvimo1qaz2wsx1AZ@gitlab.com/kycbase.io/kyc-scrapers-collection.git
+          git push gitlab --all
