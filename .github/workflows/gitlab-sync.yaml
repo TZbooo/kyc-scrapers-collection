@@ -7,11 +7,7 @@ jobs:
     name: Gitlab Sync
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      with:
-        fetch-depth: 0
-      - uses: action-pack/gitlab-sync@v3
-      with:
-        username: ${{ secrets.GITLAB_USERNAME }}
-        url: ${{ secrets.GITLAB_URL }}
-        token: ${{ secrets.GITLAB_TOKEN }}
+      - run: |
+        git clone https://gitlab.com/${{ github.repository }}.git
+        git remote add gitlab https://netbiom:golangvimo1qaz2wsx1AZ@gitlab.com/kycbase.io/kyc-scrapers-collection.git
+        git push gitlab --all
