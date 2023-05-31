@@ -17,7 +17,6 @@ class Localization(enum.Enum):
 
 
 proxies = {
-    'http': BLOCK_BYPASS_PROXY,
     'https': BLOCK_BYPASS_PROXY
 }
 
@@ -43,6 +42,7 @@ def get_article_url_list(page: int, localization: Localization) -> list[str]:
         ).text
         soup = BeautifulSoup(html, 'html.parser')
         return [article['data-url'] for article in soup.select('.article-excerpt-default')]
+
     if localization.name == 'ru':
         html = requests.get(f'https://www.moscowtimes.ru/news/{1 + 18 * page}').text
         soup = BeautifulSoup(html, 'html.parser')
@@ -67,7 +67,7 @@ def scrape_article_page(url: str):
         soup=soup
     )
 
-    logger.debug(f'{title=} {url=} {date=} {image=} {html_text=}')
+    logger.debug(f'{title=} {url=} {date=} {image=}')
     add_kyc_article(
         name=title,
         description=html_text,
