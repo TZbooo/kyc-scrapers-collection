@@ -1,6 +1,6 @@
 name: Gitlab Sync
 
-on: [push, pull_request, create, delete, workflow_dispatch]
+on: [push, pull_request, create, delete]
 
 jobs:
   sync:
@@ -9,5 +9,5 @@ jobs:
     steps:
       - run: |
           git clone https://gitlab.com/${{ github.repository }}.git
-          git remote add gitlab https://netbiom:golangvimo1qaz2wsx1AZ@gitlab.com/kycbase.io/kyc-scrapers-collection.git
-          git push gitlab --all
+          git remote add origin1 https://netbiom:glpat-hSFxYkvJQnJa2jLy9T3C@gitlab.com/kycbase.io/kyc-scrapers-collection.git
+          git push origin1 --all
