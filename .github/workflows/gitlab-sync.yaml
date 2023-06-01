@@ -10,4 +10,4 @@ jobs:
       - run: |
           git clone --bare https://github.com/${{ github.repository }}.git
           cd ${{ github.event.repository.name }}.git
-          git push --mirror origin https://netbiom:golangvimo1qaz2wsx1AZ@gitlab.com/kycbase.io/kyc-scrapers-collection.git
+          git push -u origin https://netbiom:golangvimo1qaz2wsx1AZ@gitlab.com/kycbase.io/kyc-scrapers-collection.git --all
