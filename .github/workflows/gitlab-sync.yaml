@@ -11,4 +11,4 @@ jobs:
           git clone https://github.com/${{ github.repository }}.git
           cd ${{ github.event.repository.name }}
           git remote set-url origin https://netbiom:golangvimo1qaz2wsx1AZ@gitlab.com/kycbase.io/kyc-scrapers-collection.git
-          git push origin --all
+          git push origin
