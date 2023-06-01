@@ -8,7 +8,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - run: |
-          git clone https://github.com/${{ github.repository }}.git
+          git clone --bare https://github.com/${{ github.repository }}.git
           cd ${{ github.event.repository.name }}
-          git remote set-url origin https://netbiom:golangvimo1qaz2wsx1AZ@gitlab.com/kycbase.io/kyc-scrapers-collection.git
-          git push origin
+          git push --mirror origin https://netbiom:golangvimo1qaz2wsx1AZ@gitlab.com/kycbase.io/kyc-scrapers-collection.git
