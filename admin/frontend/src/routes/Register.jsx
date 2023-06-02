@@ -1,7 +1,15 @@
+import Form from "../components/Form";
+import TextInput from "../components/TextInput";
+
 const Register = () => {
     return (
         <>
-            <h1 className='underline'>Register</h1>
+            <Form header="Register" buttonText="Register">
+                <TextInput placeholder="Username" />
+                <TextInput placeholder="Email" inputType="email" />
+                <TextInput placeholder="Password" inputType="password" />
+                <TextInput placeholder="Confirm password" inputType="password" />
+            </Form>
         </>
     );
 };
