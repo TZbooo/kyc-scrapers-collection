@@ -21,7 +21,7 @@ const Form = ({ children, header, buttonText }) => {
 };
 
 Form.propTypes = {
-    children: PropTypes.node.isRequired,
+    children: PropTypes.element.isRequired,
     header: PropTypes.string.isRequired,
     buttonText: PropTypes.string.isRequired,
 };
