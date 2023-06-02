@@ -20,19 +20,19 @@ const Register = () => {
                     value={email}
                     valueSetter={setEmail}
                     placeholder='Email'
-                    inputType='email'
+                    type='email'
                 />
                 <TextInput
                     value={password}
                     valueSetter={setPassword}
                     placeholder='Password'
-                    inputType='password'
+                    type='password'
                 />
                 <TextInput
                     value={confirmedPassword}
                     valueSetter={setConfirmedPassword}
                     placeholder='Confirm password'
-                    inputType='password'
+                    type='password'
                 />
             </Form>
         </>

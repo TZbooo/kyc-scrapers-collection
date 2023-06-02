@@ -18,7 +18,7 @@ const Login = () => {
                     value={password}
                     valueSetter={setPassword}
                     placeholder='Password'
-                    inputType='password'
+                    type='password'
                 />
             </Form>
         </>
