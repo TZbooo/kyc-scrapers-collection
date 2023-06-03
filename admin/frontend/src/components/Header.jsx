@@ -12,7 +12,7 @@ const Header = () => {
                         <div className='h-[22px] w-[5px] bg-black'></div>
                         <h1 className='font-black text-[75px]'>Заголовок</h1>
                     </div>
-                    <h2 className='font-black text-[180px] text-[#F8F8F8] h-[150px] flex items-center'>
+                    <h2 className='font-black text-[180px] text-[#F8F8F8] h-[150px] flex items-center z-[-1]'>
                         Заголовок
                     </h2>
                 </div>

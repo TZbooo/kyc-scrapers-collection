@@ -4,6 +4,7 @@ import { observer } from "mobx-react-lite";
 import { Context } from "../App";
 import BgColumns from "../components/BgColumns";
 import Header from "../components/Header";
+import ScraperList from "../components/ScraperTable";
 
 const Dashboard = observer(() => {
     const { store } = useContext(Context);
@@ -24,6 +25,7 @@ const Dashboard = observer(() => {
         <>
             <BgColumns />
             <Header />
+            <ScraperList name="Телеграм каналы" />
         </>
     );
 });
