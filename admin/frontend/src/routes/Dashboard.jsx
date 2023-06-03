@@ -1,7 +1,7 @@
 import { useContext, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { observer } from "mobx-react-lite";
-import { Context } from "../main";
+import { Context } from "../App";
 
 const Dashboard = observer(() => {
     const { store } = useContext(Context);
@@ -17,10 +17,6 @@ const Dashboard = observer(() => {
         };
         checkAuth();
     }, [store, navigate]);
-
-    if (store.isLoading) {
-        return <div>Loading...</div>;
-    }
 
     return (
         <>
