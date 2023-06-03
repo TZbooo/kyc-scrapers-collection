@@ -2,6 +2,8 @@ import { useContext, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { observer } from "mobx-react-lite";
 import { Context } from "../App";
+import BgColumns from "../components/BgColumns";
+import Header from "../components/Header";
 
 const Dashboard = observer(() => {
     const { store } = useContext(Context);
@@ -20,7 +22,8 @@ const Dashboard = observer(() => {
 
     return (
         <>
-            <h1 className='underline'>Dashboard</h1>
+            <BgColumns />
+            <Header />
         </>
     );
 });
