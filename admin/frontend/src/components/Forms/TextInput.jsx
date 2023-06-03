@@ -32,7 +32,7 @@ TextInput.propTypes = {
     valueSetter: PropTypes.func.isRequired,
     error: PropTypes.string.isRequired,
     placeholder: PropTypes.string.isRequired,
-    type: PropTypes.oneOf(["text", "password", "email"]),
+    type: PropTypes.oneOf(["text", "number", "password", "email"]),
 };
 
 export default TextInput;

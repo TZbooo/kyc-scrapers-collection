@@ -3,18 +3,12 @@ import AddIcon from "../assets/add.svg";
 import SimpleButton from "./Buttons/SimpleButton";
 import TableHeaders from "./Table/TableHeaders";
 import TableItem from "./Table/TableItem";
-import Form from "./Form";
-import TextInput from "./TextInput";
+import EditScraperForm from "./Forms/EditScraperForm";
 
 const ScraperTable = ({ name, headers }) => {
     return (
         <>
-            <Form header="Изменить парсер" buttonText="Сохранить и перезапустить">
-                <TextInput placeholder="Ссылка на канал" />
-                <TextInput placeholder="Оффсет" />
-                <TextInput placeholder="Лимит" />
-                <TextInput placeholder="Минимальное количество символов" />
-            </Form>
+            <EditScraperForm />
             <div className='pt-[255px] px-[60px] pb-[60px]'>
                 <div className='flex flex-col gap-2'>
                     <h3 className='font-black text-[#828282] text-[45px]'>

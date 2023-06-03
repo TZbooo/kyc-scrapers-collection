@@ -16,7 +16,7 @@ const SimpleButton = ({ children, filled }) => {
     );
 };
 
-SimpleButton.propTypes = {
+SimpleButton.defaultProps = {
     filled: false,
 };
 

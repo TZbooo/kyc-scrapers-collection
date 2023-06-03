@@ -1,6 +1,6 @@
 import PropTypes from "prop-types";
-import CancelButton from "./Buttons/CancelFormButton";
-import SubmitButton from "./Buttons/SubmitButton";
+import CancelButton from "../Buttons/CancelFormButton";
+import SubmitButton from "../Buttons/SubmitButton";
 
 const Form = ({ children, header, buttonText }) => {
     return (
