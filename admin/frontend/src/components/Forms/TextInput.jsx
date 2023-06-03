@@ -6,6 +6,7 @@ const TextInput = ({
     error,
     placeholder,
     type,
+    required
 }) => {
     return (
         <>
@@ -16,6 +17,7 @@ const TextInput = ({
                     className='bg-[#F0F0F0] border-[#C9C9C9] border-[1px] h-[55px] w-[705px] rounded-[8px] px-5 font-roboto text-[#1D1D1D]'
                     placeholder={placeholder}
                     type={type}
+                    required={required ? "required" : ""}
                 />
                 {error ? <span className='ml-1 font-roboto text-[#9b3434]'>{error}</span> : <></>}
             </div>
@@ -25,6 +27,7 @@ const TextInput = ({
 
 TextInput.defaultProps = {
     type: "text",
+    required: true
 };
 
 TextInput.propTypes = {
@@ -33,6 +36,7 @@ TextInput.propTypes = {
     error: PropTypes.string.isRequired,
     placeholder: PropTypes.string.isRequired,
     type: PropTypes.oneOf(["text", "number", "password", "email"]),
+    required: PropTypes.bool
 };
 
 export default TextInput;

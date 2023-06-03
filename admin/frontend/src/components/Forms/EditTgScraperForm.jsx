@@ -1,9 +1,10 @@
+import PropTypes from "prop-types";
 import { useEffect, useState } from "react";
 import Form from "./Form";
 import TextInput from "./TextInput";
 import Checkbox from "./Checkbox";
 
-const EditScraperForm = () => {
+const EditTgScraperForm = ({ disable, disableSetter }) => {
     const [channelLink, setChannelLink] = useState("");
     const [channelLinkError, setChannelLinkError] = useState("");
 
@@ -29,6 +30,8 @@ const EditScraperForm = () => {
             <Form
                 header='Изменить парсер'
                 buttonText='Сохранить и перезапустить'
+                disable={disable}
+                disableSetter={disableSetter}
             >
                 <TextInput
                     placeholder='Ссылка на канал'
@@ -64,6 +67,11 @@ const EditScraperForm = () => {
     );
 };
 
+EditTgScraperForm.propTypes = {
+    disable: PropTypes.bool.isRequired,
+    disableSetter: PropTypes.func.isRequired,
+};
+
 const validateChannelLink = (channelLink) => {
     const channelLinkMustStartWith = "https://t.me/";
 
@@ -91,4 +99,4 @@ const validatePositiveNumberInput = (value) => {
     }
 };
 
-export default EditScraperForm;
+export default EditTgScraperForm;

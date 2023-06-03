@@ -1,14 +1,21 @@
 import PropTypes from "prop-types";
+import { useState } from "react";
 import AddIcon from "../assets/add.svg";
 import SimpleButton from "./Buttons/SimpleButton";
 import TableHeaders from "./Table/TableHeaders";
 import TableItem from "./Table/TableItem";
-import EditScraperForm from "./Forms/EditScraperForm";
+import EditTgScraperForm from "./Forms/EditTgScraperForm";
 
 const ScraperTable = ({ name, headers }) => {
+    const [editTgScraperFormIsDisable, setEditTgScraperFormIsDisable] =
+        useState(true);
+
     return (
         <>
-            <EditScraperForm />
+            <EditTgScraperForm
+                disable={editTgScraperFormIsDisable}
+                disableSetter={setEditTgScraperFormIsDisable}
+            />
             <div className='pt-[255px] px-[60px] pb-[60px]'>
                 <div className='flex flex-col gap-2'>
                     <h3 className='font-black text-[#828282] text-[45px]'>
@@ -24,6 +31,7 @@ const ScraperTable = ({ name, headers }) => {
                                 totalPerDay={1234}
                                 origin='https://t.me/example'
                                 isRunning={false}
+                                editFormDisableSetter={setEditTgScraperFormIsDisable}
                             />
                             <TableItem
                                 name='Название тг канала'

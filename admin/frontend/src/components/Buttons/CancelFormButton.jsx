@@ -1,13 +1,21 @@
+import PropTypes from "prop-types";
 import CancelIcon from "../../assets/cancel.svg";
 
-const CancelButton = () => {
+const CancelFormButton = ({ handleClick }) => {
     return (
         <>
-            <div className='rounded-[3px] border-[#2E2E2E] border-[1px] p-[21px] self-end'>
+            <div
+                onClick={() => handleClick()}
+                className='rounded-[3px] border-[#2E2E2E] border-[1px] p-[21px] self-end hover:cursor-pointer'
+            >
                 <img src={CancelIcon} />
             </div>
         </>
     );
 };
 
-export default CancelButton;
+CancelFormButton.propTypes = {
+    handleClick: PropTypes.func.isRequired,
+};
+
+export default CancelFormButton;

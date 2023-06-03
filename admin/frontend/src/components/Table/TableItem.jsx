@@ -1,6 +1,6 @@
 import PropTypes from "prop-types";
-import EditIcon from "../../assets/edit.svg";
 import SimpleButton from "../Buttons/SimpleButton";
+import EditButton from "../Buttons/EditButton";
 
 const TableItem = ({
     name,
@@ -9,6 +9,7 @@ const TableItem = ({
     totalPerDay,
     origin,
     isRunning,
+    editFormDisableSetter,
 }) => {
     return (
         <>
@@ -35,9 +36,9 @@ const TableItem = ({
                         <SimpleButton>Запустить</SimpleButton>
                     )}
                     <div className='flex justify-between'>
-                        <div className='rounded-[3px] border-[#212121] border-[1px] py-[10px] pl-[12px] pr-[11px]'>
-                            <img src={EditIcon} />
-                        </div>
+                        <EditButton
+                            handleClick={() => editFormDisableSetter(false)}
+                        />
                         <span className='font-medium underline flex items-center'>
                             Удалить
                         </span>
@@ -55,6 +56,7 @@ TableItem.propTypes = {
     totalPerDay: PropTypes.number.isRequired,
     origin: PropTypes.string.isRequired,
     isRunning: PropTypes.bool.isRequired,
+    editFormDisableSetter: PropTypes.func.isRequired,
 };
 
 export default TableItem;
