@@ -7,7 +7,7 @@ const TableItem = ({
     total,
     totalPerMonth,
     totalPerDay,
-    source,
+    origin,
     isRunning,
 }) => {
     return (
@@ -26,7 +26,7 @@ const TableItem = ({
                     {totalPerDay}
                 </div>
                 <div className='h-[56px] w-[10vw] flex items-center font-normal text-[1.1vw] leading-[21.09px]'>
-                    {source}
+                    {origin}
                 </div>
                 <div className='w-[10vw] flex flex-col gap-[10px]'>
                     {isRunning ? (
@@ -53,7 +53,7 @@ TableItem.propTypes = {
     total: PropTypes.number.isRequired,
     totalPerMonth: PropTypes.number.isRequired,
     totalPerDay: PropTypes.number.isRequired,
-    source: PropTypes.string.isRequired,
+    origin: PropTypes.string.isRequired,
     isRunning: PropTypes.bool.isRequired,
 };
 

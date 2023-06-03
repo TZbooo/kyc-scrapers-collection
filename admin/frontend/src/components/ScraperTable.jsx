@@ -3,10 +3,18 @@ import AddIcon from "../assets/add.svg";
 import SimpleButton from "./Buttons/SimpleButton";
 import TableHeaders from "./Table/TableHeaders";
 import TableItem from "./Table/TableItem";
+import Form from "./Form";
+import TextInput from "./TextInput";
 
 const ScraperTable = ({ name, headers }) => {
     return (
         <>
+            <Form header="Изменить парсер" buttonText="Сохранить и перезапустить">
+                <TextInput placeholder="Ссылка на канал" />
+                <TextInput placeholder="Оффсет" />
+                <TextInput placeholder="Лимит" />
+                <TextInput placeholder="Минимальное количество символов" />
+            </Form>
             <div className='pt-[255px] px-[60px] pb-[60px]'>
                 <div className='flex flex-col gap-2'>
                     <h3 className='font-black text-[#828282] text-[45px]'>
@@ -20,7 +28,7 @@ const ScraperTable = ({ name, headers }) => {
                                 total={1234}
                                 totalPerMonth={1234}
                                 totalPerDay={1234}
-                                source='Название'
+                                origin='https://t.me/example'
                                 isRunning={false}
                             />
                             <TableItem
@@ -28,7 +36,7 @@ const ScraperTable = ({ name, headers }) => {
                                 total={1234}
                                 totalPerMonth={1234}
                                 totalPerDay={1234}
-                                source='Название'
+                                origin='https://t.me/example'
                                 isRunning={true}
                             />
                         </div>

@@ -1,17 +1,17 @@
 import PropTypes from "prop-types";
 
-const SubmitButton = ({ text }) => {
+const SubmitButton = ({ children }) => {
     return (
         <>
-            <button className='bg-[#212121] h-[50px] w-[174px] text-white text-[1.3rem] font-black'>
-                {text}
+            <button className='bg-[#212121] px-[29px] py-[20px] text-white text-[22px] leading-[35px] font-black'>
+                {children}
             </button>
         </>
     );
 };
 
 SubmitButton.propTypes = {
-    text: PropTypes.string.isRequired,
+    children: PropTypes.element.isRequired,
 };
 
 export default SubmitButton;
