@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 const BgColumns = ({ columnsCount }) => {
     return (
         <>
-            <div className='flex px-[60px] w-[100%] justify-between absolute z-[-1]'>
+            <div className='flex px-[60px] w-[100%] justify-between fixed z-[-1]'>
                 {new Array(columnsCount).fill(
                     <div className='w-[1px] h-[100vh] bg-[#f0efef]'></div>
                 )}
