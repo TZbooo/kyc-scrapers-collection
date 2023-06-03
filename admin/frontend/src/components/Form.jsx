@@ -1,4 +1,5 @@
 import PropTypes from "prop-types";
+import SubmitButton from "./Buttons/SubmitButton";
 
 const Form = ({ children, header, buttonText }) => {
     return (
@@ -11,9 +12,9 @@ const Form = ({ children, header, buttonText }) => {
                     <div className="flex flex-col gap-5">
                         {children}
                     </div>
-                    <button className='bg-[#212121] h-[50px] w-[174px] text-white text-[1.3rem] font-black'>
+                    <SubmitButton>
                         {buttonText}
-                    </button>
+                    </SubmitButton>
                 </form>
             </div>
         </>

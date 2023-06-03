@@ -1,13 +1,13 @@
 import BgColumns from "../components/BgColumns";
 import Header from "../components/Header";
-import ScraperList from "../components/ScraperTable";
+import ScraperTable from "../components/ScraperTable";
 
 const Dashboard = () => {
     return (
         <>
             <BgColumns />
             <Header />
-            <ScraperList name="Телеграм каналы" />
+            <ScraperTable name="Телеграм каналы" />
         </>
     );
 };

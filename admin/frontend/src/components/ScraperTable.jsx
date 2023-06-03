@@ -1,8 +1,9 @@
 import PropTypes from "prop-types";
 import EditIcon from "../assets/edit.svg";
 import AddIcon from "../assets/add.svg";
+import SimpleButton from "./Buttons/SimpleButton";
 
-const ScraperList = ({ name }) => {
+const ScraperTable = ({ name }) => {
     return (
         <>
             <div className='pt-[255px] px-[60px] pb-[60px]'>
@@ -49,9 +50,9 @@ const ScraperList = ({ name }) => {
                                     Название
                                 </div>
                                 <div className='w-[10vw] flex flex-col gap-[10px]'>
-                                    <button className='font-semibold rounded-[3px] border-[#212121] border-[1px] py-[12px] px-[30px]'>
+                                    <SimpleButton>
                                         Запустить
-                                    </button>
+                                    </SimpleButton>
                                     <div className='flex justify-between'>
                                         <div className='rounded-[3px] border-[#212121] border-[1px] py-[10px] pl-[12px] pr-[11px]'>
                                             <img src={EditIcon} />
@@ -79,9 +80,9 @@ const ScraperList = ({ name }) => {
                                     Название
                                 </div>
                                 <div className='w-[10vw] flex flex-col gap-[10px]'>
-                                    <button className='bg-[#212121] text-white font-semibold rounded-[3px] py-[12px] px-[30px]'>
-                                        Остановить
-                                    </button>
+                                    <SimpleButton filled={true}>
+                                        <span>Остановить</span>
+                                    </SimpleButton>
                                     <div className='flex justify-between'>
                                         <div className='rounded-[3px] border-[#212121] border-[1px] py-[10px] pl-[12px] pr-[11px]'>
                                             <img src={EditIcon} />
@@ -94,13 +95,13 @@ const ScraperList = ({ name }) => {
                             </div>
                         </div>
                         <div className="px-[42px] flex justify-between">
-                            <button className='bg-[#212121] text-white font-semibold rounded-[3px] py-[12px] px-[30px] flex gap-[11px] items-center'>
+                            <SimpleButton filled={true}>
                                 <img src={AddIcon} />
                                 <span>Добавить</span>
-                            </button>
-                            <button className='w-[148px] bg-[#212121] text-white font-semibold rounded-[3px] py-[12px] px-[30px] flex gap-[11px] items-center'>
+                            </SimpleButton>
+                            <SimpleButton filled={true}>
                                 Остановить все
-                            </button>
+                            </SimpleButton>
                         </div>
                     </div>
                 </div>
@@ -109,8 +110,8 @@ const ScraperList = ({ name }) => {
     );
 };
 
-ScraperList.propTypes = {
+ScraperTable.propTypes = {
     name: PropTypes.string.isRequired,
 };
 
-export default ScraperList;
+export default ScraperTable;
