@@ -15,7 +15,7 @@
     },
     {
       "id": "87d9e4d2-1064-4c67-b991-259bbd55c9b8",
-      "name": "Название тг канала",
+      "name": "Все для тг канала",
       "total": 1234,
       "totalPerMonth": 1234,
       "totalPerDay": 1234,
@@ -24,7 +24,20 @@
       "limit": null,
       "origin": "https://t.me/example",
       "collectRetro": true,
-      "isRunning": true
+      "isRunning": false
+    },
+    {
+      "id": "aaed6622-101b-4d2b-829f-ff89e0d9347f",
+      "name": "Тест",
+      "minCharacters": "280",
+      "offset": "0",
+      "limit": "",
+      "origin": "https://t.me/jdfoksa",
+      "collectRetro": true,
+      "total": 0,
+      "totalPerMonth": 0,
+      "totalPerDay": 0,
+      "isRunning": false
     }
   ]
 }

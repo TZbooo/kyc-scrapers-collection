@@ -1,11 +1,11 @@
 import PropTypes from "prop-types";
 import { useContext, useEffect, useState } from "react";
 import { observer } from "mobx-react-lite";
-import { ScrapersDataStoreContext } from "../../App";
-import ScrapersService, { ScraperTypes } from "../../services/scrapers";
-import Form from "./Form";
-import TextInput from "./TextInput";
-import Checkbox from "./Checkbox";
+import { ScrapersDataStoreContext } from "../../../App";
+import ScrapersService, { ScraperTypes } from "../../../services/scrapers";
+import Form from "../Form";
+import TextInput from "../TextInput";
+import Checkbox from "../Checkbox";
 
 const TelegramScraperEditForm = observer(
     ({ telegramScraperId, disable, disableSetter }) => {

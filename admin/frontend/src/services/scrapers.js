@@ -56,9 +56,18 @@ class ScrapersService {
     }
 
     async deleteScraper(id) {
-        await $api.delete(
-            `/scrapers/${this.type.description}/${id}`
+        await $api.delete(`/scrapers/${this.type.description}/${id}`);
+    }
+
+    async setRunningStatus(id, status) {
+        const response = await $api.patch(
+            `/scrapers/${this.type.description}/${id}`,
+            {
+                isRunning: status,
+            }
         );
+        const currentRunningStatus = response.data.isRunning;
+        return currentRunningStatus;
     }
 }
 

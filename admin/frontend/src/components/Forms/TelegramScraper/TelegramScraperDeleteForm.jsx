@@ -1,10 +1,11 @@
 import PropTypes from "prop-types";
 import { useContext } from "react";
-import { ScrapersDataStoreContext } from "../../App";
-import ScrapersService, { ScraperTypes } from "../../services/scrapers";
-import Form from "./Form";
+import { observer } from "mobx-react-lite";
+import { ScrapersDataStoreContext } from "../../../App";
+import ScrapersService, { ScraperTypes } from "../../../services/scrapers";
+import Form from "../Form";
 
-const TelegramScraperDeleteForm = ({
+const TelegramScraperDeleteForm = observer(({
     telegramScraperId,
     disable,
     disableSetter,
@@ -38,7 +39,7 @@ const TelegramScraperDeleteForm = ({
             </Form>
         </>
     );
-};
+});
 
 TelegramScraperDeleteForm.propTypes = {
     telegramScraperId: PropTypes.string.isRequired,

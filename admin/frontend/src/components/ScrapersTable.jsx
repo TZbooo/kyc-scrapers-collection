@@ -4,16 +4,25 @@ import AddIcon from "../assets/add.svg";
 import SimpleButton from "./Buttons/SimpleButton";
 import TableHeaders from "./Table/TableHeaders";
 import TableContent from "./Table/TableContent";
-import TelegramScraperAddForm from "./Forms/TelegramScraperAddForm";
+import TelegramScraperAddForm from "./Forms/TelegramScraper/TelegramScraperAddForm";
+import TelegramScraperToggleRunningStatusAllForm from "./Forms/TelegramScraper/TelegramScraperToggleRunningStatusAllForm";
 
 const ScraperTable = ({ name, headers, scraperType }) => {
     const [addFormIsDisable, setAddFormIsDisable] = useState(true);
+    const [
+        toggleRunningStatusAllFormIsDisable,
+        setToggleRunningStatusAllFormIsDisable,
+    ] = useState(true);
 
     return (
         <>
             <TelegramScraperAddForm
                 disable={addFormIsDisable}
                 disableSetter={setAddFormIsDisable}
+            />
+            <TelegramScraperToggleRunningStatusAllForm
+                disable={toggleRunningStatusAllFormIsDisable}
+                disableSetter={setToggleRunningStatusAllFormIsDisable}
             />
             <div className='pt-[255px] px-[60px] pb-[60px]'>
                 <div className='flex flex-col gap-2'>
@@ -33,7 +42,14 @@ const ScraperTable = ({ name, headers, scraperType }) => {
                                 <img src={AddIcon} />
                                 <span>Добавить</span>
                             </SimpleButton>
-                            <SimpleButton filled={true}>
+                            <SimpleButton
+                                handleClick={() =>
+                                    setToggleRunningStatusAllFormIsDisable(
+                                        false
+                                    )
+                                }
+                                filled={true}
+                            >
                                 Остановить все
                             </SimpleButton>
                         </div>

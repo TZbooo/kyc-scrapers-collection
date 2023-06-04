@@ -3,13 +3,18 @@ import { useState } from "react";
 import { observer } from "mobx-react-lite";
 import SimpleButton from "../Buttons/SimpleButton";
 import EditButton from "../Buttons/EditButton";
-import TelegramScraperEditForm from "../Forms/TelegramScraperEditForm";
-import TelegramScraperDeleteForm from "../Forms/TelegramScraperDeleteForm";
+import TelegramScraperEditForm from "../Forms/TelegramScraper/TelegramScraperEditForm";
+import TelegramScraperDeleteForm from "../Forms/TelegramScraper/TelegramScraperDeleteForm";
+import TelegramScraperToggleRunningStatusForm from "../Forms/TelegramScraper/TelegramScraperToggleRunningStatusForm";
 
 const TableItem = observer(
     ({ id, name, total, totalPerMonth, totalPerDay, origin, isRunning }) => {
         const [editFormIsDisable, setEditFormIsDisable] = useState(true);
         const [deleteFormIsDisable, setDeleteFormIsDisable] = useState(true);
+        const [
+            toggleRunningStatusFormIsDisable,
+            setToggleRunningStatusFormIsDisable,
+        ] = useState(true);
 
         return (
             <>
@@ -21,6 +26,11 @@ const TableItem = observer(
                 <TelegramScraperDeleteForm
                     disable={deleteFormIsDisable}
                     disableSetter={setDeleteFormIsDisable}
+                    telegramScraperId={id}
+                />
+                <TelegramScraperToggleRunningStatusForm
+                    disable={toggleRunningStatusFormIsDisable}
+                    disableSetter={setToggleRunningStatusFormIsDisable}
                     telegramScraperId={id}
                 />
                 <div className='h-[184px] w-[100%] border-[#ABABAB] border-[1px] px-[38px] flex justify-between items-center font-roboto'>
@@ -43,11 +53,22 @@ const TableItem = observer(
                     </div>
                     <div className='w-[10vw] flex flex-col gap-[10px]'>
                         {isRunning ? (
-                            <SimpleButton filled={true}>
+                            <SimpleButton
+                                handleClick={() =>
+                                    setToggleRunningStatusFormIsDisable(false)
+                                }
+                                filled={true}
+                            >
                                 Остановить
                             </SimpleButton>
                         ) : (
-                            <SimpleButton>Запустить</SimpleButton>
+                            <SimpleButton
+                                handleClick={() =>
+                                    setToggleRunningStatusFormIsDisable(false)
+                                }
+                            >
+                                Запустить
+                            </SimpleButton>
                         )}
                         <div className='flex justify-between'>
                             <EditButton
