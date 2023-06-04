@@ -24,7 +24,7 @@ const TableItem = observer(({
                 tgScraperId={id}
             />
             <div className='h-[184px] w-[100%] border-[#ABABAB] border-[1px] px-[38px] flex justify-between items-center font-roboto'>
-                <div className='h-[56px] flex items-center font-medium text-[1.1vw]'>
+                <div className='h-[56px] min-w-[10vw] flex items-center font-medium text-[1.1vw]'>
                     {name}
                 </div>
                 <div className='h-[56px] w-[10vw] flex items-center font-normal text-[1.1vw] leading-[21.09px]'>
