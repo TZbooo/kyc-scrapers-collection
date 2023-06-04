@@ -28,7 +28,7 @@
     },
     {
       "id": "aaed6622-101b-4d2b-829f-ff89e0d9347f",
-      "name": "Тест",
+      "name": "Тест2",
       "minCharacters": "280",
       "offset": "0",
       "limit": "",
@@ -37,7 +37,7 @@
       "total": 0,
       "totalPerMonth": 0,
       "totalPerDay": 0,
-      "isRunning": false
+      "isRunning": true
     }
   ]
 }
