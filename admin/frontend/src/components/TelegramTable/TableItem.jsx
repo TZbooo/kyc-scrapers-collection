@@ -2,7 +2,7 @@ import PropTypes from "prop-types";
 import { useState } from "react";
 import SimpleButton from "../Buttons/SimpleButton";
 import EditButton from "../Buttons/EditButton";
-import EditTgScraperForm from "../Forms/EditTgScraperForm";
+import TelegramScraperEditForm from "../Forms/TelegramScraperEditForm";
 
 const TableItem = ({
     id,
@@ -17,7 +17,7 @@ const TableItem = ({
 
     return (
         <>
-            <EditTgScraperForm
+            <TelegramScraperEditForm
                 disable={editFormIsDisable}
                 disableSetter={setEditFormIsDisable}
                 tgScraperId={id}

@@ -1,8 +1,8 @@
 import PropTypes from "prop-types";
 import AddIcon from "../assets/add.svg";
 import SimpleButton from "./Buttons/SimpleButton";
-import TableHeaders from "./Table/TableHeaders";
-import TableContent from "./Table/TableContent";
+import TableHeaders from "./TelegramTable/TableHeaders";
+import TableContent from "./TelegramTable/TableContent";
 
 const ScraperTable = ({ name, headers }) => {
     return (

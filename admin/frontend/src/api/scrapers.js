@@ -1,7 +1,7 @@
 import $api from "./instance";
 
 export const ScraperTypes = Object.freeze({
-    Tg: Symbol("tg"),
+    Telegram: Symbol("telegram"),
     WebSite: Symbol("site"),
 });
 

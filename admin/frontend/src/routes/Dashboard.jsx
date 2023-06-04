@@ -4,7 +4,7 @@ import { ScrapersDataStoreContext } from "../App";
 import ScrapersService, { ScraperTypes } from "../api/scrapers";
 import BgColumns from "../components/BgColumns";
 import Header from "../components/Header";
-import ScraperTable from "../components/ScraperTable";
+import ScrapersTable from "../components/ScrapersTable";
 
 const Dashboard = observer(() => {
     const telegramChannelTableHeaders = [
@@ -38,7 +38,7 @@ const Dashboard = observer(() => {
 
     useEffect(() => {
         const fetchScrapersData = async () => {
-            const scraperService = new ScrapersService(ScraperTypes.Tg);
+            const scraperService = new ScrapersService(ScraperTypes.Telegram);
             scrapersDataStore.setTgScrapersData(await scraperService.getList());
         };
         fetchScrapersData();
@@ -48,7 +48,7 @@ const Dashboard = observer(() => {
         <>
             <BgColumns />
             <Header />
-            <ScraperTable
+            <ScrapersTable
                 name='Телеграм каналы'
                 headers={telegramChannelTableHeaders}
             />

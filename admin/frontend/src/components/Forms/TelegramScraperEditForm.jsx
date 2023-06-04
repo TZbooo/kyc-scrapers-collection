@@ -4,7 +4,7 @@ import Form from "./Form";
 import TextInput from "./TextInput";
 import Checkbox from "./Checkbox";
 
-const EditTgScraperForm = ({ tgScraperId, disable, disableSetter }) => {
+const TelegramScraperEditForm = ({ tgScraperId, disable, disableSetter }) => {
     const [channelLink, setChannelLink] = useState("");
     const [channelLinkError, setChannelLinkError] = useState("");
 
@@ -68,7 +68,7 @@ const EditTgScraperForm = ({ tgScraperId, disable, disableSetter }) => {
     );
 };
 
-EditTgScraperForm.propTypes = {
+TelegramScraperEditForm.propTypes = {
     tgScraperId: PropTypes.string.isRequired,
     disable: PropTypes.bool.isRequired,
     disableSetter: PropTypes.func.isRequired,
@@ -101,4 +101,4 @@ const validatePositiveNumberInput = (value) => {
     }
 };
 
-export default EditTgScraperForm;
+export default TelegramScraperEditForm;
