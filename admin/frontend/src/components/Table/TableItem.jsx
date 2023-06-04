@@ -1,10 +1,11 @@
 import PropTypes from "prop-types";
 import { useState } from "react";
+import { observer } from "mobx-react-lite";
 import SimpleButton from "../Buttons/SimpleButton";
 import EditButton from "../Buttons/EditButton";
 import TelegramScraperEditForm from "../Forms/TelegramScraperEditForm";
 
-const TableItem = ({
+const TableItem = observer(({
     id,
     name,
     total,
@@ -56,7 +57,7 @@ const TableItem = ({
             </div>
         </>
     );
-};
+});
 
 TableItem.propTypes = {
     id: PropTypes.number.isRequired,

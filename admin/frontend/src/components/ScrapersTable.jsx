@@ -3,9 +3,8 @@ import AddIcon from "../assets/add.svg";
 import SimpleButton from "./Buttons/SimpleButton";
 import TableHeaders from "./Table/TableHeaders";
 import TableContent from "./Table/TableContent";
-import { ScraperTypes } from "../services/scrapers";
 
-const ScraperTable = ({ name, headers }) => {
+const ScraperTable = ({ name, headers, scraperType }) => {
     return (
         <>
             <div className='pt-[255px] px-[60px] pb-[60px]'>
@@ -16,7 +15,7 @@ const ScraperTable = ({ name, headers }) => {
                     <div className='flex flex-col gap-[60px]'>
                         <div className='flex flex-col gap-[15px]'>
                             <TableHeaders headers={headers} />
-                            <TableContent scraperType={ScraperTypes.Telegram} />
+                            <TableContent scraperType={scraperType} />
                         </div>
                         <div className='px-[42px] flex justify-between'>
                             <SimpleButton filled={true}>
@@ -37,6 +36,7 @@ const ScraperTable = ({ name, headers }) => {
 ScraperTable.propTypes = {
     name: PropTypes.string.isRequired,
     headers: PropTypes.array.isRequired,
+    scraperType: PropTypes.symbol.isRequired,
 };
 
 export default ScraperTable;

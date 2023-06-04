@@ -2,12 +2,22 @@ import PropTypes from "prop-types";
 import CancelFormButton from "../Buttons/CancelFormButton";
 import SubmitButton from "../Buttons/SubmitButton";
 
-const Form = ({ children, header, buttonText, disable, disableSetter }) => {
+const Form = ({
+    children,
+    header,
+    buttonText,
+    handleSubmit,
+    disable,
+    disableSetter,
+}) => {
     if (!disable) {
         return (
             <>
                 <div className='w-[100%] min-h-[100vh] bg-[#262626F2] flex justify-center items-center fixed top-0 left-0 py-[50px]'>
-                    <form className='w-[62vw] bg-white p-[40px] pb-[100px] flex flex-col items-center gap-[38px] rounded-[5px]'>
+                    <form
+                        onSubmit={handleSubmit}
+                        className='w-[62vw] bg-white p-[40px] pb-[100px] flex flex-col items-center gap-[38px] rounded-[5px]'
+                    >
                         <CancelFormButton
                             handleClick={() => disableSetter(true)}
                         />
@@ -33,6 +43,7 @@ Form.propTypes = {
     children: PropTypes.element.isRequired,
     header: PropTypes.string.isRequired,
     buttonText: PropTypes.string.isRequired,
+    handleSubmit: PropTypes.func.isRequired,
     disable: PropTypes.bool,
     disableSetter: PropTypes.func,
 };

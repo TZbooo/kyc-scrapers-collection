@@ -51,6 +51,7 @@ const Dashboard = observer(() => {
             <ScrapersTable
                 name='Телеграм каналы'
                 headers={telegramChannelTableHeaders}
+                scraperType={ScraperTypes.Telegram}
             />
         </>
     );

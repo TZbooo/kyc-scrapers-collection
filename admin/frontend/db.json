@@ -1,22 +1,30 @@
 {
-    "scrapers_telegram": [
-        {
-            "id": "4dc47c26-391c-488a-ab9d-e3246ee29c2a",
-            "name": "Название тг канала",
-            "total": 1234,
-            "totalPerMonth": 1234,
-            "totalPerDay": 1234,
-            "origin": "https://t.me/example",
-            "isRunning": false
-        },
-        {
-            "id": "87d9e4d2-1064-4c67-b991-259bbd55c9b8",
-            "name": "Название тг канала",
-            "total": 1234,
-            "totalPerMonth": 1234,
-            "totalPerDay": 1234,
-            "origin": "https://t.me/example",
-            "isRunning": true
-        }
-    ]
+  "scrapers_telegram": [
+    {
+      "id": "4dc47c26-391c-488a-ab9d-e3246ee29c2a",
+      "name": "Топор",
+      "total": 1234,
+      "totalPerMonth": 1234,
+      "totalPerDay": 1234,
+      "minCharacters": 280,
+      "offset": "20",
+      "limit": null,
+      "origin": "https://t.me/dfsafadsfads",
+      "collectRetro": true,
+      "isRunning": false
+    },
+    {
+      "id": "87d9e4d2-1064-4c67-b991-259bbd55c9b8",
+      "name": "Название тг канала",
+      "total": 1234,
+      "totalPerMonth": 1234,
+      "totalPerDay": 1234,
+      "minCharacters": 280,
+      "offset": 0,
+      "limit": null,
+      "origin": "https://t.me/example",
+      "collectRetro": true,
+      "isRunning": true
+    }
+  ]
 }

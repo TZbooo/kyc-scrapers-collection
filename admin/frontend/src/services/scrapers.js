@@ -12,7 +12,29 @@ class ScrapersService {
 
     async getList() {
         const response = await $api.get(`/scrapers/${this.type.description}`);
-        console.log(response.data);
+        return response.data;
+    }
+
+    async updateScraper(
+        id,
+        name,
+        minCharacters,
+        offset,
+        limit,
+        origin,
+        collectRetro
+    ) {
+        const response = await $api.patch(
+            `/scrapers/${this.type.description}/${id}`,
+            {
+                name: name,
+                minCharacters: minCharacters,
+                offset: offset,
+                limit: limit,
+                origin: origin,
+                collectRetro: collectRetro,
+            }
+        );
         return response.data;
     }
 }

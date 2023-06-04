@@ -1,3 +1,4 @@
 {
-    "/scrapers/telegram": "/scrapers_telegram"
+    "/scrapers/telegram": "/scrapers_telegram",
+    "/scrapers/telegram/:id": "/scrapers_telegram/:id"
 }
