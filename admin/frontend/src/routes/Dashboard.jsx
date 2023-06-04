@@ -1,7 +1,7 @@
 import { useContext, useEffect } from "react";
 import { observer } from "mobx-react-lite";
 import { ScrapersDataStoreContext } from "../App";
-import ScrapersService, { ScraperTypes } from "../api/scrapers";
+import ScrapersService, { ScraperTypes } from "../services/scrapers";
 import BgColumns from "../components/BgColumns";
 import Header from "../components/Header";
 import ScrapersTable from "../components/ScrapersTable";

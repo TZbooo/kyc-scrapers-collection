@@ -1,8 +1,9 @@
 import PropTypes from "prop-types";
 import AddIcon from "../assets/add.svg";
 import SimpleButton from "./Buttons/SimpleButton";
-import TableHeaders from "./TelegramTable/TableHeaders";
-import TableContent from "./TelegramTable/TableContent";
+import TableHeaders from "./Table/TableHeaders";
+import TableContent from "./Table/TableContent";
+import { ScraperTypes } from "../services/scrapers";
 
 const ScraperTable = ({ name, headers }) => {
     return (
@@ -15,7 +16,7 @@ const ScraperTable = ({ name, headers }) => {
                     <div className='flex flex-col gap-[60px]'>
                         <div className='flex flex-col gap-[15px]'>
                             <TableHeaders headers={headers} />
-                            <TableContent />
+                            <TableContent scraperType={ScraperTypes.Telegram} />
                         </div>
                         <div className='px-[42px] flex justify-between'>
                             <SimpleButton filled={true}>
