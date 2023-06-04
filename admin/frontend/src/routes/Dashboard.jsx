@@ -1,8 +1,12 @@
+import { useContext, useEffect } from "react";
+import { observer } from "mobx-react-lite";
+import { ScrapersDataStoreContext } from "../App";
+import ScrapersService, { ScraperTypes } from "../api/scrapers";
 import BgColumns from "../components/BgColumns";
 import Header from "../components/Header";
 import ScraperTable from "../components/ScraperTable";
 
-const Dashboard = () => {
+const Dashboard = observer(() => {
     const telegramChannelTableHeaders = [
         {
             id: 0,
@@ -30,6 +34,16 @@ const Dashboard = () => {
         },
     ];
 
+    const scrapersDataStore = useContext(ScrapersDataStoreContext);
+
+    useEffect(() => {
+        const fetchScrapersData = async () => {
+            const scraperService = new ScrapersService(ScraperTypes.Tg);
+            scrapersDataStore.setTgScrapersData(await scraperService.getList());
+        };
+        fetchScrapersData();
+    }, [scrapersDataStore]);
+
     return (
         <>
             <BgColumns />
@@ -40,6 +54,6 @@ const Dashboard = () => {
             />
         </>
     );
-};
+});
 
 export default Dashboard;
