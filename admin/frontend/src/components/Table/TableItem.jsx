@@ -24,8 +24,8 @@ const TableItem = observer(({
                 tgScraperId={id}
             />
             <div className='h-[184px] w-[100%] border-[#ABABAB] border-[1px] px-[38px] flex justify-between items-center font-roboto'>
-                <div className='h-[56px] min-w-[10vw] flex items-center font-medium text-[1.1vw]'>
-                    {name}
+                <div className='h-[56px] w-[10vw] flex items-center font-medium text-[1.1vw]'>
+                    <span className="truncate">{name}</span>
                 </div>
                 <div className='h-[56px] w-[10vw] flex items-center font-normal text-[1.1vw] leading-[21.09px]'>
                     {total}
@@ -37,7 +37,9 @@ const TableItem = observer(({
                     {totalPerDay}
                 </div>
                 <div className='h-[56px] w-[10vw] flex items-center font-normal text-[1.1vw] leading-[21.09px]'>
-                    {origin}
+                    <a href={origin} className="truncate">
+                        <span className="underline">{origin}</span>
+                    </a>
                 </div>
                 <div className='w-[10vw] flex flex-col gap-[10px]'>
                     {isRunning ? (
