@@ -54,6 +54,12 @@ class ScrapersService {
         );
         return response.data;
     }
+
+    async deleteScraper(id) {
+        await $api.delete(
+            `/scrapers/${this.type.description}/${id}`
+        );
+    }
 }
 
 export default ScrapersService;

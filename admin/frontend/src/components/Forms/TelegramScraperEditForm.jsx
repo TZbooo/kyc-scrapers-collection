@@ -8,10 +8,10 @@ import TextInput from "./TextInput";
 import Checkbox from "./Checkbox";
 
 const TelegramScraperEditForm = observer(
-    ({ tgScraperId, disable, disableSetter }) => {
+    ({ telegramScraperId, disable, disableSetter }) => {
         const scrapersDataStore = useContext(ScrapersDataStoreContext);
         const scraper = scrapersDataStore.tgScrapersData.find(
-            (scraper) => scraper.id === tgScraperId
+            (scraper) => scraper.id === telegramScraperId
         );
 
         const [name, setName] = useState(scraper.name);
@@ -34,9 +34,9 @@ const TelegramScraperEditForm = observer(
 
         const handleSubmit = async (event) => {
             event.preventDefault();
-            const scraperService = new ScrapersService(ScraperTypes.Telegram);
-            const response = await scraperService.updateScraper(
-                tgScraperId,
+            const scrapersService = new ScrapersService(ScraperTypes.Telegram);
+            const response = await scrapersService.updateScraper(
+                telegramScraperId,
                 name,
                 minCharacters,
                 offset,
@@ -71,7 +71,7 @@ const TelegramScraperEditForm = observer(
                 >
                     <input
                         type='hidden'
-                        value={tgScraperId}
+                        value={telegramScraperId}
                         name='telegram_scraper_id'
                     />
                     <TextInput
@@ -116,7 +116,7 @@ const TelegramScraperEditForm = observer(
 );
 
 TelegramScraperEditForm.propTypes = {
-    tgScraperId: PropTypes.string.isRequired,
+    telegramScraperId: PropTypes.string.isRequired,
     disable: PropTypes.bool.isRequired,
     disableSetter: PropTypes.func.isRequired,
 };

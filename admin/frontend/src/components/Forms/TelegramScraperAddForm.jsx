@@ -28,8 +28,8 @@ const TelegramScraperAddForm = observer(({ disable, disableSetter }) => {
 
     const handleSubmit = async (event) => {
         event.preventDefault();
-        const scraperService = new ScrapersService(ScraperTypes.Telegram);
-        const response = await scraperService.addScraper(
+        const scrapersService = new ScrapersService(ScraperTypes.Telegram);
+        const response = await scrapersService.addScraper(
             name,
             minCharacters,
             offset,
@@ -39,6 +39,11 @@ const TelegramScraperAddForm = observer(({ disable, disableSetter }) => {
         );
         disableSetter(true);
         scrapersDataStore.tgScrapersData.push(response);
+        setName("");
+        setScraperOrigin("");
+        setOffset("");
+        setLimit("");
+        setMinCharacters("");
     };
 
     useEffect(() => {
