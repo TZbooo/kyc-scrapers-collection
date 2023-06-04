@@ -29,6 +29,7 @@ const TelegramScraperEditForm = observer(
             scraper.minCharacters
         );
         const [minCharactersError, setMinCharactersError] = useState("");
+
         const [collectRetro, setCollectRetro] = useState(scraper.collectRetro);
 
         const handleSubmit = async (event) => {
@@ -71,7 +72,7 @@ const TelegramScraperEditForm = observer(
                     <input
                         type='hidden'
                         value={tgScraperId}
-                        name='tg_scraper_id'
+                        name='telegram_scraper_id'
                     />
                     <TextInput
                         placeholder='Имя'

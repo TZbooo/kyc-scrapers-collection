@@ -15,6 +15,23 @@ class ScrapersService {
         return response.data;
     }
 
+    async addScraper(name, minCharacters, offset, limit, origin, collectRetro) {
+        const response = await $api.post(`/scrapers/${this.type.description}`, {
+            id: crypto.randomUUID(),
+            name: name,
+            minCharacters: minCharacters,
+            offset: offset,
+            limit: limit,
+            origin: origin,
+            collectRetro: collectRetro,
+            total: 0,
+            totalPerMonth: 0,
+            totalPerDay: 0,
+            isRunning: true,
+        });
+        return response.data;
+    }
+
     async updateScraper(
         id,
         name,

@@ -13,7 +13,7 @@ const Form = ({
     if (!disable) {
         return (
             <>
-                <div className='w-[100%] min-h-[100vh] bg-[#262626F2] flex justify-center items-center fixed top-0 left-0 py-[50px]'>
+                <div className='w-[100%] min-h-[100vh] bg-[#262626F2] flex justify-center items-center fixed top-0 left-0'>
                     <form
                         onSubmit={handleSubmit}
                         className='w-[62vw] bg-white p-[40px] pb-[100px] flex flex-col items-center gap-[38px] rounded-[5px]'

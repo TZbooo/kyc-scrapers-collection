@@ -1,12 +1,20 @@
 import PropTypes from "prop-types";
+import { useState } from "react";
 import AddIcon from "../assets/add.svg";
 import SimpleButton from "./Buttons/SimpleButton";
 import TableHeaders from "./Table/TableHeaders";
 import TableContent from "./Table/TableContent";
+import TelegramScraperAddForm from "./Forms/TelegramScraperAddForm";
 
 const ScraperTable = ({ name, headers, scraperType }) => {
+    const [addFormIsDisable, setAddFormIsDisable] = useState(true);
+
     return (
         <>
+            <TelegramScraperAddForm
+                disable={addFormIsDisable}
+                disableSetter={setAddFormIsDisable}
+            />
             <div className='pt-[255px] px-[60px] pb-[60px]'>
                 <div className='flex flex-col gap-2'>
                     <h3 className='font-black text-[#828282] text-[45px]'>
@@ -18,7 +26,10 @@ const ScraperTable = ({ name, headers, scraperType }) => {
                             <TableContent scraperType={scraperType} />
                         </div>
                         <div className='px-[42px] flex justify-between'>
-                            <SimpleButton filled={true}>
+                            <SimpleButton
+                                filled={true}
+                                handleClick={() => setAddFormIsDisable(false)}
+                            >
                                 <img src={AddIcon} />
                                 <span>Добавить</span>
                             </SimpleButton>

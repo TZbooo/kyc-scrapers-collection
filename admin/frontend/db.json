@@ -25,6 +25,19 @@
       "origin": "https://t.me/example",
       "collectRetro": true,
       "isRunning": true
+    },
+    {
+      "id": "224c57df-f35e-4051-bc83-67915a52ff81",
+      "name": "Тест",
+      "minCharacters": "280",
+      "offset": "0",
+      "limit": "",
+      "origin": "https://t.me/eeeee",
+      "collectRetro": true,
+      "total": 0,
+      "totalPerMonth": 0,
+      "totalPerDay": 0,
+      "isRunning": true
     }
   ]
 }
