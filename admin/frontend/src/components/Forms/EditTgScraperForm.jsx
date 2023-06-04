@@ -4,7 +4,7 @@ import Form from "./Form";
 import TextInput from "./TextInput";
 import Checkbox from "./Checkbox";
 
-const EditTgScraperForm = ({ disable, disableSetter }) => {
+const EditTgScraperForm = ({ tgScraperId, disable, disableSetter }) => {
     const [channelLink, setChannelLink] = useState("");
     const [channelLinkError, setChannelLinkError] = useState("");
 
@@ -33,6 +33,7 @@ const EditTgScraperForm = ({ disable, disableSetter }) => {
                 disable={disable}
                 disableSetter={disableSetter}
             >
+                <input type='hidden' value={tgScraperId} name='tg_scraper_id' />
                 <TextInput
                     placeholder='Ссылка на канал'
                     value={channelLink}
@@ -68,6 +69,7 @@ const EditTgScraperForm = ({ disable, disableSetter }) => {
 };
 
 EditTgScraperForm.propTypes = {
+    tgScraperId: PropTypes.string.isRequired,
     disable: PropTypes.bool.isRequired,
     disableSetter: PropTypes.func.isRequired,
 };

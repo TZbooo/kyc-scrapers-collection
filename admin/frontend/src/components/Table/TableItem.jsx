@@ -1,18 +1,27 @@
 import PropTypes from "prop-types";
+import { useState } from "react";
 import SimpleButton from "../Buttons/SimpleButton";
 import EditButton from "../Buttons/EditButton";
+import EditTgScraperForm from "../Forms/EditTgScraperForm";
 
 const TableItem = ({
+    id,
     name,
     total,
     totalPerMonth,
     totalPerDay,
     origin,
     isRunning,
-    editFormDisableSetter,
 }) => {
+    const [editFormIsDisable, setEditFormIsDisable] = useState(true);
+
     return (
         <>
+            <EditTgScraperForm
+                disable={editFormIsDisable}
+                disableSetter={setEditFormIsDisable}
+                tgScraperId={id}
+            />
             <div className='h-[184px] w-[100%] border-[#ABABAB] border-[1px] px-[38px] flex justify-between items-center font-roboto'>
                 <div className='h-[56px] flex items-center font-medium text-[1.1vw]'>
                     {name}
@@ -37,7 +46,7 @@ const TableItem = ({
                     )}
                     <div className='flex justify-between'>
                         <EditButton
-                            handleClick={() => editFormDisableSetter(false)}
+                            handleClick={() => setEditFormIsDisable(false)}
                         />
                         <span className='font-medium underline flex items-center'>
                             Удалить
@@ -50,13 +59,13 @@ const TableItem = ({
 };
 
 TableItem.propTypes = {
+    id: PropTypes.number.isRequired,
     name: PropTypes.string.isRequired,
     total: PropTypes.number.isRequired,
     totalPerMonth: PropTypes.number.isRequired,
     totalPerDay: PropTypes.number.isRequired,
     origin: PropTypes.string.isRequired,
     isRunning: PropTypes.bool.isRequired,
-    editFormDisableSetter: PropTypes.func.isRequired,
 };
 
 export default TableItem;

@@ -5,7 +5,7 @@ const CancelFormButton = ({ handleClick }) => {
     return (
         <>
             <div
-                onClick={() => handleClick()}
+                onClick={handleClick}
                 className='rounded-[3px] border-[#2E2E2E] border-[1px] p-[21px] self-end hover:cursor-pointer'
             >
                 <img src={CancelIcon} />
