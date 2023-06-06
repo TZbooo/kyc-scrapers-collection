@@ -20,7 +20,17 @@ services:
 
   worker:
     build: .
-    command: celery -A scraper.worker.celery worker -c 10 --loglevel=INFO -Q periodic,regular
+    command: celery -A scraper.worker.celery worker -c 3 --loglevel=INFO
+    env_file:
+      - .env
+    volumes:
+      - ./:/code
+    depends_on:
+      - redis
+
+  beat:
+    build: .
+    command: celery -A scraper.worker.celery beat --loglevel=INFO
     env_file:
       - .env
     volumes:

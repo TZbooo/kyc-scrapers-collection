@@ -10,7 +10,7 @@ from .services import (
 def setup_periodic_tasks(sender, **kwargs):
     sender.add_periodic_task(
         schedule=60 * 30,
-        sig=check_for_new_washington_post_articles_task.s().set(queue='periodic')
+        sig=check_for_new_washington_post_articles_task.s()
     )
 
 

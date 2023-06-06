@@ -14,7 +14,7 @@ from .services import (
 def setup_periodic_tasks(sender, **kwargs):
     sender.add_periodic(
         schedule=60 * 20,
-        sig=check_for_new_lenta_ru_articles_task.s().set(queue='periodic')
+        sig=check_for_new_lenta_ru_articles_task.s()
     )
 
 

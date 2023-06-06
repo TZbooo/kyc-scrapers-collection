@@ -12,7 +12,7 @@ from .services import scrape_article_page, get_dated_article_list
 def setup_periodic_tasks(sender, **kwargs):
     sender.add_periodic_task(
         schedule=60 * 20,
-        sig=check_for_new_compromat_articles_task.s().set(queue='periodic')
+        sig=check_for_new_compromat_articles_task.s()
     )
 
 
