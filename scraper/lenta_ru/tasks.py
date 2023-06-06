@@ -21,9 +21,13 @@ def setup_periodic_tasks(sender, **kwargs):
 @celery.task(name='check_for_new_lenta_ru_articles_task')
 def check_for_new_lenta_ru_articles_task():
     while True:
-        now_msk = datetime.now(pytz.timezone('Europe/Moscow')).strftime('%Y/%m/%d')
-        archive_page_url_template = 'https://lenta.ru/' + now_msk + '/page/{page}/'
-        article_url_list = get_article_url_list(archive_page_url_template, limit=1)
+        now_msk = datetime.now(
+            pytz.timezone('Europe/Moscow')
+        ).strftime('%Y/%m/%d')
+        archive_page_url_template = 'https://lenta.ru/' + \
+            now_msk + '/page/{page}/'
+        article_url_list = get_article_url_list(
+            archive_page_url_template, limit=1)
         scrape_lenta_ru_articles_chunk(article_url_list)
         time.sleep(60 * 20)
 
@@ -45,7 +49,8 @@ def scrape_lenta_ru_task() -> bool:
         print(f'{day=}')
         try:
             scraping_date = start_scraping_date + timedelta(days=day)
-            archive_url_template = 'https://lenta.ru/' + scraping_date.strftime('%Y/%m/%d') + '/page/{page}/'
+            archive_url_template = 'https://lenta.ru/' + \
+                scraping_date.strftime('%Y/%m/%d') + '/page/{page}/'
             article_url_list = get_article_url_list(archive_url_template)
             scrape_lenta_ru_articles_chunk(article_url_list)
         except Exception as e:

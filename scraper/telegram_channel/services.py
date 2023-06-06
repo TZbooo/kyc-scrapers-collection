@@ -14,7 +14,7 @@ def get_message_image(message: types.Message) -> io.BytesIO:
         image = io.BytesIO(message.download_media(file=bytes))
         image.name = f'{message.id}-{uuid.uuid4().hex}.jpg'
         return image
-    
+
 
 async def get_message_image_async(message: types.Message) -> io.BytesIO:
     if isinstance(message.media, types.MessageMediaPhoto):
@@ -50,7 +50,7 @@ def get_scraper_conf_by_channel_username(channel_username: str) -> dict:
     for scraper in SCRAPING_CONF['telegram']:
         if channel_username == get_username_from_channel_link(scraper['channel_link']):
             return scraper
-        
+
 
 def get_article_name_and_description(
     message: types.Message,
@@ -67,7 +67,7 @@ def get_article_name_and_description(
     if len(text) < min_characters:
         logger.info('message hasn\'t min characters, skip')
         return
-    
+
     text = delete_source_names_from_text(
         channel=channel,
         message=message,

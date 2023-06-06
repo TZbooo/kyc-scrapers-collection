@@ -49,17 +49,17 @@ def scrape_compromat_task():
         * 12 + (now_msk.month - latest_article_date.month)
 
     for month in range(month_count):
-            current_date = latest_article_date + relativedelta(months=month)
-            dated_article_list = get_dated_article_list(
-                month=current_date.month,
-                year=current_date.year
-            )
+        current_date = latest_article_date + relativedelta(months=month)
+        dated_article_list = get_dated_article_list(
+            month=current_date.month,
+            year=current_date.year
+        )
 
-            for dated_article in dated_article_list:
-                try:
-                    scrape_article_page(
-                        url=dated_article.url,
-                        date=dated_article.date
-                    )
-                except Exception as e:
-                    logger.error(e)
+        for dated_article in dated_article_list:
+            try:
+                scrape_article_page(
+                    url=dated_article.url,
+                    date=dated_article.date
+                )
+            except Exception as e:
+                logger.error(e)

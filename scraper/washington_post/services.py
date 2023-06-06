@@ -41,13 +41,16 @@ def convert_article_parts_to_html(title: str, article_parts: list[dict]) -> str:
                 content = li['content']
                 html_text += f'<li>{content}</li>'
             html_text += f'</{list_tag}>'
-    
+
     return html_text
 
 
 def scrape_article_item(article_item: dict):
     article_url = article_item['canonical_url']
-    title = article_item['additional_properties']['page_title'].replace(' - The Washington Post', '')
+    title = article_item['additional_properties']['page_title'].replace(
+        ' - The Washington Post',
+        ''
+    )
     date = datetime.fromisoformat(
         article_item['created_date'][:-1]
     ).strftime('%Y-%m-%d')
@@ -136,7 +139,7 @@ def get_washington_post_articles(
         params['query'] = f'{{"query":"prism://prism.query/site,/national/investigations&offset={offset}&limit={limit}"}}'
     else:
         params['query'] = f'{{"query":"prism://prism.query/site-articles-only,/{category.name}/&offset={offset}&limit={limit}"}}'
-    
+
     response = requests.get(
         'https://www.washingtonpost.com/prism/api/prism-query',
         headers=headers,

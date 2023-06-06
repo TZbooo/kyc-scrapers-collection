@@ -29,7 +29,10 @@ def run_scraping_tasks():
 
     logger.success('manual scraping complete! start listen for new messages')
 
-    channel_username_list = [scraper['channel_link'] for scraper in SCRAPING_CONF['telegram']]
+    channel_username_list = [
+        scraper['channel_link']
+        for scraper in SCRAPING_CONF['telegram']
+    ]
     logger.info(channel_username_list)
 
     listen_for_new_channels_messages.apply_async(
@@ -53,6 +56,7 @@ def run_scraping_tasks():
     if SCRAPING_CONF['compromat']['run_scraper']:
         logger.info('start compromat.ru scraper')
         scrape_compromat_task.apply_async()
+
 
 if __name__ == '__main__':
     run_scraping_tasks()

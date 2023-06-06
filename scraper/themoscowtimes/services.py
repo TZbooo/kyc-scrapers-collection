@@ -23,7 +23,9 @@ proxies = {
 
 def convert_article_parts_to_html(title: str, soup: BeautifulSoup) -> str:
     html_text = f'<h1>{title}</h1>'
-    article_block_list = soup.select_one('.article__content .article__block--html')
+    article_block_list = soup.select_one(
+        '.article__content .article__block--html'
+    )
 
     for article_block in article_block_list:
         if not article_block.text.strip():
@@ -44,7 +46,9 @@ def get_article_url_list(page: int, localization: Localization) -> list[str]:
         return [article['data-url'] for article in soup.select('.article-excerpt-default')]
 
     if localization.name == 'ru':
-        html = requests.get(f'https://www.moscowtimes.ru/news/{1 + 18 * page}').text
+        html = requests.get(
+            f'https://www.moscowtimes.ru/news/{1 + 18 * page}'
+        ).text
         soup = BeautifulSoup(html, 'html.parser')
         return [article['href'] for article in soup.select('.article-excerpt-default > a')]
 
@@ -53,7 +57,8 @@ def scrape_article_page(url: str):
     html = requests.get(url, proxies=proxies).text
     soup = BeautifulSoup(html, 'html.parser')
 
-    title = soup.select_one('meta[property="og:title"]')['content'].replace(' - The Moscow Times', '')
+    title = soup.select_one('meta[property="og:title"]')[
+        'content'].replace(' - The Moscow Times', '')
     date = datetime.fromisoformat(
         soup.select_one('meta[property="article:published_time"]')['content']
     ).strftime('%Y-%m-%d')

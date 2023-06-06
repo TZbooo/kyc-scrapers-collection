@@ -13,7 +13,10 @@ from scraper.bsslib import get_driver, convert_article_parts_to_html
 
 def get_article_image(driver: webdriver.Chrome) -> io.BytesIO | None:
     try:
-        image_url = driver.find_element(By.CLASS_NAME, 'picture__image').get_attribute('src')
+        image_url = driver.find_element(
+            by=By.CLASS_NAME,
+            value='picture__image'
+        ).get_attribute('src')
         logger.debug(f'{image_url=}')
 
         response = requests.get(image_url)
@@ -92,4 +95,3 @@ def scrape_lenta_ru_articles_chunk(article_url_list: list[str]):
             )
     finally:
         driver.quit()
-        

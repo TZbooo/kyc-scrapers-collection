@@ -13,7 +13,10 @@ from .services import get_article_url_list, scrape_moscow_post_articles_chunk
 
 @celery.on_after_finalize.connect
 def setup_periodic_tasks(sender, **kwargs):
-    sender.add_periodic_task(60 * 30, check_for_new_moscow_post_articles_task.s())
+    sender.add_periodic_task(
+        60 * 30,
+        check_for_new_moscow_post_articles_task.s()
+    )
 
 
 @celery.task(name='check_for_new_moscow_post_articles_task')
@@ -54,7 +57,7 @@ def scrape_moscow_post_task() -> bool:
 
             logger.info('wait for page load')
             time.sleep(15)
-    
+
         try:
             article_url_list = get_article_url_list(
                 driver=driver,

@@ -25,7 +25,11 @@ def scrape_telegram_channel_task(
     reverse: bool = False
 ) -> bool:
     logger.info(f'start scrape for {channel_link=}')
-    client = TelegramClient(StringSession(MTPROTO_TOKEN), MTPROTO_API_ID, MTPROTO_API_HASH)
+    client = TelegramClient(
+        session=StringSession(MTPROTO_TOKEN),
+        api_id=MTPROTO_API_ID,
+        api_hash=MTPROTO_API_HASH
+    )
     client.start()
     client.parse_mode = 'html'
 

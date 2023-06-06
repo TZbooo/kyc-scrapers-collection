@@ -14,10 +14,14 @@ from scraper.bsslib import get_driver, convert_article_parts_to_html
 
 def get_article_image(driver: webdriver.Chrome) -> io.BytesIO | None:
     try:
-        image_url = driver.find_element(By.CSS_SELECTOR, 'h2 + div img').get_attribute('src')
+        image_url = driver.find_element(
+            By.CSS_SELECTOR, 'h2 + div img'
+        ).get_attribute('src')
         driver.get(image_url)
 
-        image = io.BytesIO(driver.find_element(By.CSS_SELECTOR, 'img[src^=http]').screenshot_as_png)
+        image = io.BytesIO(driver.find_element(
+            By.CSS_SELECTOR, 'img[src^=http]'
+        ).screenshot_as_png)
         image.name = f'moscow-post-{uuid.uuid4().hex}.png'
         return image
     except:
@@ -60,7 +64,10 @@ def scrape_article_page(driver: webdriver.Chrome, url: str):
         By.CSS_SELECTOR,
         'meta[property="article:published_time"]'
     ).get_attribute('content')[5:][:-15]
-    date = datetime.strptime(published_time_string, '%d %b %Y').strftime('%Y-%m-%d')
+    date = datetime.strptime(
+        published_time_string,
+        '%d %b %Y'
+    ).strftime('%Y-%m-%d')
 
     title = driver.find_element(By.TAG_NAME, 'h1').text
     logger.debug(f'{title=} {url=}')
