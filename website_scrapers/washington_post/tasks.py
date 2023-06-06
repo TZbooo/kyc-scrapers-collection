@@ -1,5 +1,5 @@
-from scraper.config import logger, SCRAPING_CONF
-from scraper.worker import celery
+from website_scrapers.config import logger, SCRAPING_CONF
+from website_scrapers.worker import celery
 from .services import (
     ArticleCategories,
     scrape_all_artciles_from_category
@@ -34,7 +34,7 @@ def scrape_washington_post_task() -> bool:
         if categories_settings[category.name]['skip']:
             logger.info(f'category {category.name} skip')
             continue
-                
+
         scrape_all_artciles_from_category(
             category=category,
             offset=categories_settings[category.name]['offset']

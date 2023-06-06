@@ -1,10 +1,10 @@
 import pytz
 from datetime import datetime
-from scraper.worker import celery
+from website_scrapers.worker import celery
 
 from dateutil.relativedelta import relativedelta
 
-from scraper.config import logger, SCRAPING_CONF
+from website_scrapers.config import logger, SCRAPING_CONF
 from .services import scrape_article_page, get_dated_article_list
 
 

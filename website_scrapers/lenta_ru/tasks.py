@@ -2,8 +2,8 @@ import time
 import pytz
 from datetime import datetime, timedelta
 
-from scraper.config import SCRAPING_CONF
-from scraper.worker import celery
+from website_scrapers.config import SCRAPING_CONF
+from website_scrapers.worker import celery
 from .services import (
     get_article_url_list,
     scrape_lenta_ru_articles_chunk

@@ -7,9 +7,9 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.common.exceptions import NoSuchElementException
 
-from scraper.config import logger
-from scraper.kyc import add_kyc_article
-from scraper.bsslib import get_driver, convert_article_parts_to_html
+from website_scrapers.config import logger
+from website_scrapers.kyc import add_kyc_article
+from website_scrapers.bsslib import get_driver, convert_article_parts_to_html
 
 
 def get_article_image(driver: webdriver.Chrome) -> io.BytesIO | None:

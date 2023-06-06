@@ -2,7 +2,7 @@ import io
 
 import requests
 
-from scraper.config import logger, KYC_BASE_API_TOKEN
+from website_scrapers.config import logger, KYC_BASE_API_TOKEN
 
 
 def add_kyc_article(

@@ -5,8 +5,8 @@ import io
 from bs4 import BeautifulSoup
 from telethon import types
 
-from scraper.config import logger, SCRAPING_CONF
-from scraper.kyc import add_kyc_article
+from website_scrapers.config import logger, SCRAPING_CONF
+from website_scrapers.kyc import add_kyc_article
 
 
 def get_message_image(message: types.Message) -> io.BytesIO:

@@ -1,40 +1,53 @@
 version: '3'
 
 services:
-  frontend:
-    build:
-      context: ./admin/frontend
-      dockerfile: Dockerfile.dev
-    ports:
-      - 8080:8080
+  # frontend:
+  #   build:
+  #     context: ./admin/frontend
+  #     dockerfile: Dockerfile.dev
+  #   command: nginx -g daemon off;
+  #   ports:
+  #     - 8080:8080
 
-  scraper:
+  backend:
+    build: ./admin/backend
+    command: python main.py
+    volumes:
+      - ./admin/backend:/code
+    ports:
+      - 8000:8000
+    env_file:
+      - .env
+    depends_on:
+      - mongo
+
+  website_scrapers:
     build: .
-    command: python -m scraper.run
+    command: python -m website_scrapers.run
     env_file:
       - .env
     volumes:
-      - ./:/code
+      - ./website_scrapers:/code/website_scrapers
     depends_on:
       - worker
 
   worker:
     build: .
-    command: celery -A scraper.worker.celery worker -c 3 --loglevel=INFO
+    command: celery -A website_scrapers.worker.celery worker -c 3 --loglevel=INFO
     env_file:
       - .env
     volumes:
-      - ./:/code
+      - ./website_scrapers:/code/website_scrapers
     depends_on:
       - redis
 
   beat:
     build: .
-    command: celery -A scraper.worker.celery beat --loglevel=INFO
+    command: celery -A website_scrapers.worker.celery beat --loglevel=INFO
     env_file:
       - .env
     volumes:
-      - ./:/code
+      - ./website_scrapers:/code/website_scrapers
     depends_on:
       - redis
 
@@ -49,3 +62,17 @@ services:
 
   redis:
     image: redis:7-alpine
+
+  mongo:
+    image: mongo
+    restart: always
+    env_file:
+      - .env
+
+  mongo-express:
+    image: mongo-express
+    restart: always
+    ports:
+      - 8081:8081
+    env_file:
+      - .env

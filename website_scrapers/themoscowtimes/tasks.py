@@ -1,8 +1,8 @@
 import time
 import itertools
 
-from scraper.config import logger, SCRAPING_CONF
-from scraper.worker import celery
+from website_scrapers.config import logger, SCRAPING_CONF
+from website_scrapers.worker import celery
 from .services import Localization, get_article_url_list, scrape_article_page
 
 
@@ -47,7 +47,7 @@ def scrape_themoscowpost_task() -> bool:
                 localization=Localization.en
             )
             logger.info(f'{ru_article_url_list=} {en_article_url_list}')
-            
+
             if not (ru_article_url_list or en_article_url_list):
                 if empty_article_list_count == 10:
                     break

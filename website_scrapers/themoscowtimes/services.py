@@ -6,8 +6,8 @@ from datetime import datetime
 import requests
 from bs4 import BeautifulSoup
 
-from scraper.config import logger, BLOCK_BYPASS_PROXY
-from scraper.kyc import add_kyc_article
+from website_scrapers.config import logger, BLOCK_BYPASS_PROXY
+from website_scrapers.kyc import add_kyc_article
 
 
 @enum.unique

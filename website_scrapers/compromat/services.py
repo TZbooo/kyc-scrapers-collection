@@ -7,8 +7,8 @@ import requests
 from bs4 import BeautifulSoup, Comment
 from pydantic import BaseModel, HttpUrl
 
-from scraper.config import logger
-from scraper.kyc import add_kyc_article
+from website_scrapers.config import logger
+from website_scrapers.kyc import add_kyc_article
 from . import WEBSITE_BASE_URL
 
 

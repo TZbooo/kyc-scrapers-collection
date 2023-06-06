@@ -1,14 +1,14 @@
 from telethon.sync import TelegramClient, events
 from telethon.sessions import StringSession
 
-from scraper.config import (
+from website_scrapers.config import (
     logger,
 
     MTPROTO_TOKEN,
     MTPROTO_API_ID,
     MTPROTO_API_HASH
 )
-from scraper.worker import celery
+from website_scrapers.worker import celery
 from .services import (
     scrape_message,
     scrape_message_async,

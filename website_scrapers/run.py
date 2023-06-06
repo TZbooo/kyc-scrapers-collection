@@ -1,10 +1,10 @@
-from scraper.config import logger, SCRAPING_CONF
-from scraper.moscow_post.tasks import scrape_moscow_post_task
-from scraper.washington_post.tasks import scrape_washington_post_task
-from scraper.themoscowtimes.tasks import scrape_themoscowpost_task
-from scraper.lenta_ru.tasks import scrape_lenta_ru_task
-from scraper.compromat.tasks import scrape_compromat_task
-from scraper.telegram_channel.tasks import scrape_telegram_channel_task, listen_for_new_channels_messages
+from website_scrapers.config import logger, SCRAPING_CONF
+from website_scrapers.moscow_post.tasks import scrape_moscow_post_task
+from website_scrapers.washington_post.tasks import scrape_washington_post_task
+from website_scrapers.themoscowtimes.tasks import scrape_themoscowpost_task
+from website_scrapers.lenta_ru.tasks import scrape_lenta_ru_task
+from website_scrapers.compromat.tasks import scrape_compromat_task
+from website_scrapers.telegram_channel.tasks import scrape_telegram_channel_task, listen_for_new_channels_messages
 
 
 def start_telegram_channels_scraping() -> list:

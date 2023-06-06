@@ -5,8 +5,8 @@ from datetime import datetime
 
 import requests
 
-from scraper.config import logger, PROXY_CYCLE
-from scraper.kyc import add_kyc_article
+from website_scrapers.config import logger, PROXY_CYCLE
+from website_scrapers.kyc import add_kyc_article
 
 
 @enum.unique
