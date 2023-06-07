@@ -1,3 +1,4 @@
+from beanie import PydanticObjectId
 from pydantic import BaseModel, HttpUrl
 
 
@@ -11,6 +12,10 @@ class BaseTelegramScraperSchema(BaseModel):
 
 class AddTelegramScraperSchema(BaseTelegramScraperSchema):
     pass
+
+
+class UpdateTelegramScraperSchema(BaseTelegramScraperSchema):
+    object_id: PydanticObjectId
 
 
 class GetTelegramScraperSchema(BaseTelegramScraperSchema):

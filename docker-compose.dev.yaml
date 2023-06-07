@@ -20,45 +20,37 @@ services:
       - .env
     depends_on:
       - mongo
-
-  website_scrapers:
-    build: .
-    command: python -m website_scrapers.run
-    env_file:
-      - .env
-    volumes:
-      - ./website_scrapers:/code/website_scrapers
-    depends_on:
       - worker
 
+  # website_scrapers:
+  #   build: .
+  #   command: python -m website_scrapers.run
+  #   env_file:
+  #     - .env
+  #   volumes:
+  #     - ./website_scrapers:/code/website_scrapers
+  #   depends_on:
+  #     - worker
+
   worker:
-    build: .
-    command: celery -A website_scrapers.worker.celery worker -c 3 --loglevel=INFO
+    build: ./admin/backend
+    command: celery -A server.worker.celery worker -c 3 --loglevel=INFO
     env_file:
       - .env
     volumes:
-      - ./website_scrapers:/code/website_scrapers
+      - ./admin/backend:/code
     depends_on:
       - redis
 
   beat:
-    build: .
-    command: celery -A website_scrapers.worker.celery beat --loglevel=INFO
+    build: ./admin/backend
+    command: celery -A server.worker.celery beat --loglevel=INFO
     env_file:
       - .env
     volumes:
-      - ./website_scrapers:/code/website_scrapers
+      - ./admin/backend:/code
     depends_on:
       - redis
-
-  flower:
-    image: mher/flower
-    ports:
-      - 5555:5555
-    depends_on:
-      - redis
-    env_file:
-      - .env
 
   redis:
     image: redis:7-alpine

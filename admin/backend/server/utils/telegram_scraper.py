@@ -5,8 +5,8 @@ import io
 from bs4 import BeautifulSoup
 from telethon import types
 
-from website_scrapers.config import logger, SCRAPING_CONF
-from website_scrapers.kyc import add_kyc_article
+from server.config import logger
+from server.kyc import add_kyc_article
 
 
 def get_message_image(message: types.Message) -> io.BytesIO:
@@ -40,17 +40,6 @@ def delete_source_names_from_text(channel: types.Channel, message: types.Message
     except AttributeError:
         pass
     return text
-
-
-def get_username_from_channel_link(channel_link: str) -> str:
-    return channel_link.replace('https://t.me/', '').replace('/', '')
-
-
-def get_scraper_conf_by_channel_username(channel_username: str) -> dict:
-    for scraper in SCRAPING_CONF['telegram']:
-        logger.debug(f'{scraper=}')
-        if channel_username == get_username_from_channel_link(scraper['channel_link']):
-            return scraper
 
 
 def get_article_name_and_description(

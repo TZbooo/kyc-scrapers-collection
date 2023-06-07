@@ -54,6 +54,7 @@ def listen_for_new_channels_messages(channel_username_list: list[str]):
             message = event.message
             channel = await event.get_chat()
 
+            logger.debug(f'channel username {channel.username}')
             scraper = get_scraper_conf_by_channel_username(channel.username)
             min_characters = scraper['min_characters']
 

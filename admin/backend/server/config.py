@@ -1,5 +1,9 @@
 import os
 
+from loguru import logger
+
+
+logger.add('logs/log_{time}.log', rotation='1 week', compression='zip')
 
 KYC_BASE_API_TOKEN = os.environ['KYC_BASE_API_TOKEN']
 
