@@ -9,7 +9,7 @@ async def get_telegram_scraper_list(
     skip: int | None = None,
     limit: int | None = None
 ) -> list[TelegramScraper]:
-    telegram_scraper_list = await TelegramScraper.find_all(
+    telegram_scraper_list = await TelegramScraper.all(
         skip=skip,
         limit=limit
     ).to_list()
@@ -20,6 +20,14 @@ async def get_telegram_scraper_list(
 async def get_telegram_scraper_by_channel_link(channel_link: HttpUrl) -> TelegramScraper:
     telegram_scraper = await TelegramScraper.find_one(
         TelegramScraper.channel_link == channel_link
+    )
+    return telegram_scraper
+
+
+@validate_arguments
+async def get_telegram_scraper_by_object_id(object_id: PydanticObjectId) -> TelegramScraper:
+    telegram_scraper = await TelegramScraper.find_one(
+        TelegramScraper.id == object_id
     )
     return telegram_scraper
 
@@ -52,9 +60,8 @@ async def update_telegram_scraper(
     reverse: bool,
     min_characters: int
 ) -> TelegramScraper:
-    telegram_scraper = await TelegramScraper.find_one(
-        TelegramScraper.id == object_id
-    )
+    telegram_scraper = await get_telegram_scraper_by_object_id(object_id)
+
     await telegram_scraper.set({
         TelegramScraper.channel_link: channel_link,
         TelegramScraper.offset: offset,
@@ -63,7 +70,19 @@ async def update_telegram_scraper(
         TelegramScraper.min_characters: min_characters
     })
 
-    updated_telegram_scraper = await TelegramScraper.find_one(
-        TelegramScraper.id == object_id
-    )
+    updated_telegram_scraper = await get_telegram_scraper_by_object_id(object_id)
+    return updated_telegram_scraper
+
+
+@validate_arguments
+async def set_telegram_scraper_task_id(
+    object_id: PydanticObjectId,
+    task_id: str
+) -> TelegramScraper:
+    telegram_scraper = await get_telegram_scraper_by_object_id(object_id)
+    await telegram_scraper.set({
+        TelegramScraper.task_id: task_id
+    })
+
+    updated_telegram_scraper = await get_telegram_scraper_by_object_id(object_id)
     return updated_telegram_scraper

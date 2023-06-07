@@ -1,17 +1,18 @@
-from uuid import UUID
 from datetime import datetime
 
-from beanie import Document, Indexed
+from beanie import Document
 from pydantic import BaseModel, HttpUrl
+
+from .base_config import ConfiguredBaseModel
 
 
 class ArticleAddingStatisticItem(BaseModel):
     date: datetime
 
 
-class TelegramScraper(Document):
+class TelegramScraper(Document, ConfiguredBaseModel):
     is_running: bool = False
-    task_id: Indexed(UUID, unique=True) | None = None
+    task_id: str | None = None
 
     article_adding_statistics: list[ArticleAddingStatisticItem] = []
 
@@ -20,7 +21,3 @@ class TelegramScraper(Document):
     limit: int | None = None
     reverse: bool = True
     min_characters: int
-
-
-class TelegramUpdatesScraperConf(Document):
-    task_id: Indexed(UUID, unique=True) | None = None

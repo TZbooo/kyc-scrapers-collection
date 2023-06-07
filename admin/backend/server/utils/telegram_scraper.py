@@ -107,6 +107,7 @@ def scrape_message(
     )
 
 
+@logger.catch
 async def scrape_message_async(
     min_characters: int,
     message: types.Message,
