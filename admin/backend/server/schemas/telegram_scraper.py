@@ -18,5 +18,14 @@ class UpdateTelegramScraperSchema(BaseTelegramScraperSchema):
     object_id: PydanticObjectId
 
 
+class UpdateTelegramScraperRunningStatusSchema(BaseModel):
+    object_id: PydanticObjectId
+    running_status: bool
+
+
+class DeleteTelegramScraperSchema(BaseModel):
+    object_id: PydanticObjectId
+
+
 class GetTelegramScraperSchema(BaseTelegramScraperSchema):
     is_running: bool

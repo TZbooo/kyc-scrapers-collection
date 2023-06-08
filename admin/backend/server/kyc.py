@@ -21,7 +21,7 @@ def add_kyc_article(
         'date': date
     }
 
-    json_response = requests.post(
+    response = requests.post(
         'https://kycbase.io/parsers/api/articles/',
         data=data,
         files={
@@ -30,8 +30,12 @@ def add_kyc_article(
         headers={
             'Authorization': f'Token {KYC_BASE_API_TOKEN}'
         }
-    ).json()
+    )
+    if response.status_code == 404:
+        logger.error('KYC server is not responding')
+        return
 
+    json_response = response.json()
     article_id = json_response.get('id')
     if article_id is None:
         article_id = json_response.get('name')[0]

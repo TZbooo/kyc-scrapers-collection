@@ -12,7 +12,7 @@ class ArticleAddingStatisticItem(BaseModel):
 
 class TelegramScraper(Document, ConfiguredBaseModel):
     is_running: bool = False
-    task_id: str | None = None
+    job_id: str | None = None
 
     article_adding_statistics: list[ArticleAddingStatisticItem] = []
 

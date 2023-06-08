@@ -1,5 +1,3 @@
-from pydantic import validate_arguments
-
 from server.models.telegram_updates_scraper_conf import TelegramUpdatesScraperConf
 
 
@@ -16,11 +14,10 @@ async def add_telegram_updates_scraper_conf_if_not_exists():
         await new_telegram_updates_scraper_conf.create()
 
 
-@validate_arguments
-async def set_telegram_updates_scraper_task_id(task_id: str) -> TelegramUpdatesScraperConf:
+async def set_telegram_updates_scraper_job_id(job_id: str) -> TelegramUpdatesScraperConf:
     telegram_updates_scraper = await get_telegram_updates_scraper_conf()
     await telegram_updates_scraper.set({
-        TelegramUpdatesScraperConf.task_id: task_id
+        TelegramUpdatesScraperConf.job_id: job_id
     })
 
     updated_telegram_updates_scraper = await get_telegram_updates_scraper_conf()

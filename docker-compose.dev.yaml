@@ -1,14 +1,6 @@
 version: '3'
 
 services:
-  # frontend:
-  #   build:
-  #     context: ./admin/frontend
-  #     dockerfile: Dockerfile.dev
-  #   command: nginx -g daemon off;
-  #   ports:
-  #     - 8080:8080
-
   backend:
     build: ./admin/backend
     command: python main.py
@@ -20,40 +12,20 @@ services:
       - .env
     depends_on:
       - mongo
-      - worker
-
-  # website_scrapers:
-  #   build: .
-  #   command: python -m website_scrapers.run
-  #   env_file:
-  #     - .env
-  #   volumes:
-  #     - ./website_scrapers:/code/website_scrapers
-  #   depends_on:
-  #     - worker
+      - redis
 
   worker:
     build: ./admin/backend
-    command: celery -A server.worker.celery worker -c 3 --loglevel=INFO
+    command: arq server.worker.WorkerSettings --watch /code/server
     env_file:
       - .env
-    volumes:
-      - ./admin/backend:/code
     depends_on:
-      - redis
-
-  beat:
-    build: ./admin/backend
-    command: celery -A server.worker.celery beat --loglevel=INFO
-    env_file:
-      - .env
-    volumes:
-      - ./admin/backend:/code
-    depends_on:
-      - redis
+      - backend
 
   redis:
     image: redis:7-alpine
+    ports:
+      - 6379:6379
 
   mongo:
     image: mongo
