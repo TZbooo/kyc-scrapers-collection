@@ -5,7 +5,7 @@ services:
     build:
       context: ./admin/frontend
       dockerfile: Dockerfile.dev
-    command: npx vite --host --port 8080
+    command: npm run dev
     ports:
       - 8080:8080
 
