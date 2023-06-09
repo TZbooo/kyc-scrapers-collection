@@ -6,5 +6,5 @@ WORKDIR /usr/data/www
 
 COPY ./package.json .
 
-RUN npm install --include=dev
+RUN npm install --production=false
 COPY . .
