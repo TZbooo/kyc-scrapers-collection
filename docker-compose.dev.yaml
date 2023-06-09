@@ -6,8 +6,6 @@ services:
       context: ./admin/frontend
       dockerfile: Dockerfile.dev
     command: npm run dev
-    volumes:
-      - ./admin/frontend/:/usr/data/www
     ports:
       - 8080:8080
 
