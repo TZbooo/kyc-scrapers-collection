@@ -13,14 +13,14 @@ const TableContent = observer(({ scraperType }) => {
             <>
                 {scrapersDataStore.tgScrapersData.map((tableItem) => (
                     <TableItem
-                        key={tableItem.id}
-                        id={tableItem.id}
+                        key={tableItem.object_d}
+                        id={tableItem.object_id}
                         name={tableItem.name}
-                        total={tableItem.total}
-                        totalPerMonth={tableItem.totalPerMonth}
-                        totalPerDay={tableItem.totalPerDay}
-                        origin={tableItem.origin}
-                        isRunning={tableItem.isRunning}
+                        total={0}
+                        totalPerMonth={0}
+                        totalPerDay={0}
+                        origin={tableItem.channel_link}
+                        isRunning={tableItem.is_running}
                     />
                 ))}
             </>
@@ -31,14 +31,14 @@ const TableContent = observer(({ scraperType }) => {
             <>
                 {scrapersDataStore.webSiteScrapersData.map((tableItem) => (
                     <TableItem
-                        key={tableItem.id}
-                        id={tableItem.id}
+                        key={tableItem.object_id}
+                        id={tableItem.object_id}
                         name={tableItem.name}
-                        total={tableItem.total}
-                        totalPerMonth={tableItem.totalPerMonth}
-                        totalPerDay={tableItem.totalPerDay}
-                        origin={tableItem.origin}
-                        isRunning={tableItem.isRunning}
+                        total={0}
+                        totalPerMonth={0}
+                        totalPerDay={0}
+                        origin={tableItem.channel_link}
+                        isRunning={tableItem.is_running}
                     />
                 ))}
             </>

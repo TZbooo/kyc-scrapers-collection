@@ -1,8 +1,11 @@
 from beanie import PydanticObjectId
-from pydantic import BaseModel, HttpUrl
+from pydantic import BaseModel, HttpUrl, Field
+from bson import ObjectId
 
 
 class BaseTelegramScraperSchema(BaseModel):
+    name: str
+    is_running: bool
     channel_link: HttpUrl
     offset: int
     limit: int | None = None
@@ -16,11 +19,12 @@ class AddTelegramScraperSchema(BaseTelegramScraperSchema):
 
 class UpdateTelegramScraperSchema(BaseTelegramScraperSchema):
     object_id: PydanticObjectId
+    is_running: None = None
 
 
 class UpdateTelegramScraperRunningStatusSchema(BaseModel):
     object_id: PydanticObjectId
-    running_status: bool
+    is_running: bool
 
 
 class DeleteTelegramScraperSchema(BaseModel):
@@ -28,4 +32,4 @@ class DeleteTelegramScraperSchema(BaseModel):
 
 
 class GetTelegramScraperSchema(BaseTelegramScraperSchema):
-    is_running: bool
+    object_id: PydanticObjectId = Field(alias='_id')

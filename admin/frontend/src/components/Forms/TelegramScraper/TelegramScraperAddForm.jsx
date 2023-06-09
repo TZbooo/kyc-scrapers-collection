@@ -33,7 +33,7 @@ const TelegramScraperAddForm = observer(({ disable, disableSetter }) => {
             name,
             minCharacters,
             offset,
-            limit,
+            limit ? limit : null,
             scraperOrigin,
             collectRetro
         );

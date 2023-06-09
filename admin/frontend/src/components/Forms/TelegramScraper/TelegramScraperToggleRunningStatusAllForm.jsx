@@ -9,7 +9,7 @@ const TelegramScraperToggleRunningStatusAllForm = observer(
     ({ disable, disableSetter }) => {
         const scrapersDataStore = useContext(ScrapersDataStoreContext);
         const runningScrapers = scrapersDataStore.tgScrapersData.filter(
-            (scraper) => scraper.isRunning
+            (scraper) => scraper.is_running
         );
 
         const handleSubmit = async (event) => {
@@ -17,15 +17,13 @@ const TelegramScraperToggleRunningStatusAllForm = observer(
             const scrapersService = new ScrapersService(ScraperTypes.Telegram);
 
             Promise.all(
-                runningScrapers.map(
-                    async (scraper) => {
-                        await scrapersService.setRunningStatus(
-                            scraper.id,
-                            false
-                        )
-                        scraper.isRunning = false;
-                    }
-                )
+                runningScrapers.map(async (scraper) => {
+                    await scrapersService.setRunningStatus(
+                        scraper.object_id,
+                        false
+                    );
+                    scraper.is_running = false;
+                })
             );
             disableSetter(true);
         };

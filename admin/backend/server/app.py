@@ -1,4 +1,5 @@
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 
 from .database import init_db
 from .schemas.telegram_scraper import (
@@ -21,6 +22,18 @@ from .tasks import run_all_telegram_scrapers
 
 app = FastAPI()
 
+origins = [
+    'http://localhost:8080'
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=['*'],
+    allow_headers=['*'],
+)
+
 
 @app.on_event('startup')
 async def startup():
@@ -33,6 +46,8 @@ async def startup():
 @app.post('/')
 async def add_telegram_scraper_post(data: AddTelegramScraperSchema) -> GetTelegramScraperSchema:
     new_telegram_scraper = await add_telegram_scraper(
+        name=data.name,
+        is_running=data.is_running,
         channel_link=data.channel_link,
         offset=data.offset,
         limit=data.limit,
@@ -47,6 +62,7 @@ async def add_telegram_scraper_post(data: AddTelegramScraperSchema) -> GetTelegr
 async def update_telegram_scraper_put(data: UpdateTelegramScraperSchema) -> GetTelegramScraperSchema:
     updated_telegram_scraper = await update_telegram_scraper(
         object_id=data.object_id,
+        name=data.name,
         channel_link=data.channel_link,
         offset=data.offset,
         limit=data.limit,
@@ -57,13 +73,13 @@ async def update_telegram_scraper_put(data: UpdateTelegramScraperSchema) -> GetT
     return updated_telegram_scraper
 
 
-@app.patch('/running_status')
+@app.patch('/is_running')
 async def set_telegram_scraper_running_status_patch(
     data: UpdateTelegramScraperRunningStatusSchema
 ) -> GetTelegramScraperSchema:
     updated_telegram_scraper = await set_telegram_scraper_running_status(
         object_id=data.object_id,
-        running_status=data.running_status
+        is_running=data.is_running
     )
     return updated_telegram_scraper
 
@@ -75,7 +91,7 @@ async def delete_telegram_scraper_delete(data: DeleteTelegramScraperSchema) -> b
     return delete_telegram_scraper_status
 
 
-@app.get('/')
+@app.get('/', response_model_by_alias=False)
 async def get_telegram_scraper_list_get() -> list[GetTelegramScraperSchema]:
     telegram_scraper_list = await get_telegram_scraper_list()
     return telegram_scraper_list

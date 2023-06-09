@@ -11,12 +11,14 @@ const TelegramScraperEditForm = observer(
     ({ telegramScraperId, disable, disableSetter }) => {
         const scrapersDataStore = useContext(ScrapersDataStoreContext);
         const scraper = scrapersDataStore.tgScrapersData.find(
-            (scraper) => scraper.id === telegramScraperId
+            (scraper) => scraper.object_id === telegramScraperId
         );
 
         const [name, setName] = useState(scraper.name);
 
-        const [scraperOrigin, setScraperOrigin] = useState(scraper.origin);
+        const [scraperOrigin, setScraperOrigin] = useState(
+            scraper.channel_link
+        );
         const [scraperOriginError, setScraperOriginError] = useState("");
 
         const [offset, setOffset] = useState(scraper.offset);
@@ -26,11 +28,11 @@ const TelegramScraperEditForm = observer(
         const [limitError, setLimitError] = useState("");
 
         const [minCharacters, setMinCharacters] = useState(
-            scraper.minCharacters
+            scraper.min_characters
         );
         const [minCharactersError, setMinCharactersError] = useState("");
 
-        const [collectRetro, setCollectRetro] = useState(scraper.collectRetro);
+        const [collectRetro, setCollectRetro] = useState(scraper.reverse);
 
         const handleSubmit = async (event) => {
             event.preventDefault();
@@ -40,7 +42,7 @@ const TelegramScraperEditForm = observer(
                 name,
                 minCharacters,
                 offset,
-                limit,
+                limit ? limit : null,
                 scraperOrigin,
                 collectRetro
             );

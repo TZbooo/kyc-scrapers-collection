@@ -9,7 +9,7 @@ const TelegramScraperToggleRunningStatusForm = observer(
     ({ telegramScraperId, disable, disableSetter }) => {
         const scrapersDataStore = useContext(ScrapersDataStoreContext);
         const scraper = scrapersDataStore.tgScrapersData.find(
-            (scraper) => scraper.id === telegramScraperId
+            (scraper) => scraper.object_id === telegramScraperId
         );
 
         const handleSubmit = async (event) => {
@@ -17,9 +17,9 @@ const TelegramScraperToggleRunningStatusForm = observer(
             const scrapersService = new ScrapersService(ScraperTypes.Telegram);
             const currentRunningStatus = await scrapersService.setRunningStatus(
                 telegramScraperId,
-                !scraper.isRunning
+                !scraper.is_running
             );
-            scraper.isRunning = currentRunningStatus;
+            scraper.is_running = currentRunningStatus;
             disableSetter(true);
         };
 
@@ -27,11 +27,11 @@ const TelegramScraperToggleRunningStatusForm = observer(
             <>
                 <Form
                     header={
-                        scraper.isRunning
+                        scraper.is_running
                             ? "Вы действительно хотите остановить парсер"
                             : "Вы действительно хотите запустить парсер"
                     }
-                    buttonText={scraper.isRunning ? "Остановить" : "Запустить"}
+                    buttonText={scraper.is_running ? "Остановить" : "Запустить"}
                     handleSubmit={handleSubmit}
                     disable={disable}
                     disableSetter={disableSetter}

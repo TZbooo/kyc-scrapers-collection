@@ -30,6 +30,8 @@ async def get_telegram_scraper_by_object_id(object_id: PydanticObjectId) -> Tele
 
 
 async def add_telegram_scraper(
+    name: str,
+    is_running: bool,
     channel_link: HttpUrl,
     offset: int,
     limit: int | None,
@@ -37,6 +39,8 @@ async def add_telegram_scraper(
     min_characters: int
 ) -> TelegramScraper:
     new_telegram_scraper = TelegramScraper(
+        name=name,
+        is_running=is_running,
         channel_link=channel_link,
         offset=offset,
         limit=limit,
@@ -49,6 +53,7 @@ async def add_telegram_scraper(
 
 async def update_telegram_scraper(
     object_id: PydanticObjectId,
+    name: str,
     channel_link: HttpUrl,
     offset: int,
     limit: int | None,
@@ -58,6 +63,7 @@ async def update_telegram_scraper(
     telegram_scraper = await get_telegram_scraper_by_object_id(object_id)
 
     await telegram_scraper.set({
+        TelegramScraper.name: name,
         TelegramScraper.channel_link: channel_link,
         TelegramScraper.offset: offset,
         TelegramScraper.limit: limit,
@@ -84,11 +90,11 @@ async def set_telegram_scraper_job_id(
 
 async def set_telegram_scraper_running_status(
     object_id: PydanticObjectId,
-    running_status: bool
+    is_running: bool
 ) -> TelegramScraper:
     telegram_scraper = await get_telegram_scraper_by_object_id(object_id)
     await telegram_scraper.set({
-        TelegramScraper.is_running: running_status
+        TelegramScraper.is_running: is_running
     })
 
     updated_telegram_scraper = await get_telegram_scraper_by_object_id(object_id)

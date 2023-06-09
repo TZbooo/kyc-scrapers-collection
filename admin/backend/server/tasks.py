@@ -7,7 +7,6 @@ from arq.connections import RedisSettings
 
 from .config import (
     logger,
-    redis,
 
     MTPROTO_TOKEN,
     MTPROTO_API_ID,
@@ -114,15 +113,12 @@ async def run_linear_telegram_scrapers(
     telegram_scraper_list: list[TelegramScraper]
 ):
     for telegram_scraper in telegram_scraper_list:
-        if telegram_scraper.job_id:
-            try:
-                job = Job(
-                    job_id=telegram_scraper.job_id,
-                    redis=redis
-                )
-                await job.abort()
-            except Exception as e:
-                logger.error(e)
+        job = Job(telegram_scraper.job_id, pool)
+        try:
+            await job.abort()
+            logger.success(f'success abort job {telegram_scraper.job_id}')
+        except Exception as e:
+            logger.error(f'cannot abort job: {e}')
 
         job = await pool.enqueue_job(
             'scrape_telegram_channel_job',
@@ -144,15 +140,14 @@ async def run_telegram_updates_scraper(
 ):
     channel_link_list = [i.channel_link for i in telegram_scraper_list]
     telegram_updates_scraper_conf = await get_telegram_updates_scraper_conf()
-    if telegram_updates_scraper_conf.job_id:
-        try:
-            job = Job(
-                job_id=telegram_updates_scraper_conf.job_id,
-                redis=redis
-            )
-            await job.abort()
-        except Exception as e:
-            logger.error(f'abort job error {e}')
+    job = Job(telegram_updates_scraper_conf.job_id, pool)
+    try:
+        await job.abort()
+        logger.success(
+            f'success abort job {telegram_updates_scraper_conf.job_id}'
+        )
+    except Exception as e:
+        logger.error(f'cannot abort job: {e}')
 
     job = await pool.enqueue_job(
         'listen_for_new_telegram_channel_messages_job',

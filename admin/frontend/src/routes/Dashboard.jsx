@@ -39,7 +39,9 @@ const Dashboard = observer(() => {
     useEffect(() => {
         const fetchScrapersData = async () => {
             const scraperService = new ScrapersService(ScraperTypes.Telegram);
-            scrapersDataStore.setTgScrapersData(await scraperService.getList());
+            const tgScraperList = await scraperService.getList();
+            console.log(tgScraperList);
+            scrapersDataStore.setTgScrapersData(tgScraperList);
         };
         fetchScrapersData();
     }, [scrapersDataStore]);

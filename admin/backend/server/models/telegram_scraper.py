@@ -16,6 +16,7 @@ class TelegramScraper(Document, ConfiguredBaseModel):
 
     article_adding_statistics: list[ArticleAddingStatisticItem] = []
 
+    name: str
     channel_link: HttpUrl
     offset: int
     limit: int | None = None

@@ -5,41 +5,41 @@ import { ScrapersDataStoreContext } from "../../../App";
 import ScrapersService, { ScraperTypes } from "../../../services/scrapers";
 import Form from "../Form";
 
-const TelegramScraperDeleteForm = observer(({
-    telegramScraperId,
-    disable,
-    disableSetter,
-}) => {
-    const scrapersDataStore = useContext(ScrapersDataStoreContext);
+const TelegramScraperDeleteForm = observer(
+    ({ telegramScraperId, disable, disableSetter }) => {
+        const scrapersDataStore = useContext(ScrapersDataStoreContext);
 
-    const handleSubmit = async (event) => {
-        event.preventDefault();
-        const scrapersService = new ScrapersService(ScraperTypes.Telegram);
-        await scrapersService.deleteScraper(telegramScraperId);
-        disableSetter(true);
-        scrapersDataStore.tgScrapersData = scrapersDataStore.tgScrapersData.filter(
-            (scraper) => scraper.id !== telegramScraperId
+        const handleSubmit = async (event) => {
+            event.preventDefault();
+            console.log(telegramScraperId);
+            const scrapersService = new ScrapersService(ScraperTypes.Telegram);
+            await scrapersService.deleteScraper(telegramScraperId);
+            disableSetter(true);
+            scrapersDataStore.tgScrapersData =
+                scrapersDataStore.tgScrapersData.filter(
+                    (scraper) => scraper.object_id !== telegramScraperId
+                );
+        };
+
+        return (
+            <>
+                <Form
+                    header='Вы действительно хотите удалить парсер?'
+                    buttonText='Удалить'
+                    handleSubmit={handleSubmit}
+                    disable={disable}
+                    disableSetter={disableSetter}
+                >
+                    <input
+                        type='hidden'
+                        value={telegramScraperId}
+                        name='telegram_scraper_id'
+                    />
+                </Form>
+            </>
         );
-    };
-
-    return (
-        <>
-            <Form
-                header='Вы действительно хотите удалить парсер?'
-                buttonText='Удалить'
-                handleSubmit={handleSubmit}
-                disable={disable}
-                disableSetter={disableSetter}
-            >
-                <input
-                    type='hidden'
-                    value={telegramScraperId}
-                    name='telegram_scraper_id'
-                />
-            </Form>
-        </>
-    );
-});
+    }
+);
 
 TelegramScraperDeleteForm.propTypes = {
     telegramScraperId: PropTypes.string.isRequired,

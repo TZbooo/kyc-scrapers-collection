@@ -1,6 +1,16 @@
 version: '3'
 
 services:
+  frontend:
+    build:
+      context: ./admin/frontend
+      dockerfile: Dockerfile.dev
+    command: npx vite --port 8080 --host 0.0.0.0
+    volumes:
+      - ./admin/frontend/:/usr/data/www
+    ports:
+      - 8080:8080
+
   backend:
     build: ./admin/backend
     command: python main.py

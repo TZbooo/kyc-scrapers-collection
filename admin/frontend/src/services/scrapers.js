@@ -11,23 +11,19 @@ class ScrapersService {
     }
 
     async getList() {
-        const response = await $api.get(`/scrapers/${this.type.description}`);
+        const response = await $api.get("/");
         return response.data;
     }
 
     async addScraper(name, minCharacters, offset, limit, origin, collectRetro) {
-        const response = await $api.post(`/scrapers/${this.type.description}`, {
-            id: crypto.randomUUID(),
+        const response = await $api.post("/", {
             name: name,
-            minCharacters: minCharacters,
+            is_running: true,
+            min_characters: minCharacters,
             offset: offset,
             limit: limit,
-            origin: origin,
-            collectRetro: collectRetro,
-            total: 0,
-            totalPerMonth: 0,
-            totalPerDay: 0,
-            isRunning: true,
+            channel_link: origin,
+            reverse: collectRetro,
         });
         return response.data;
     }
@@ -41,32 +37,28 @@ class ScrapersService {
         origin,
         collectRetro
     ) {
-        const response = await $api.patch(
-            `/scrapers/${this.type.description}/${id}`,
-            {
-                name: name,
-                minCharacters: minCharacters,
-                offset: offset,
-                limit: limit,
-                origin: origin,
-                collectRetro: collectRetro,
-            }
-        );
+        const response = await $api.put("/", {
+            object_id: id,
+            name: name,
+            offset: offset,
+            limit: limit,
+            channel_link: origin,
+            min_characters: minCharacters,
+            reverse: collectRetro,
+        });
         return response.data;
     }
 
     async deleteScraper(id) {
-        await $api.delete(`/scrapers/${this.type.description}/${id}`);
+        await $api.delete("/", { data: { object_id: id } });
     }
 
     async setRunningStatus(id, status) {
-        const response = await $api.patch(
-            `/scrapers/${this.type.description}/${id}`,
-            {
-                isRunning: status,
-            }
-        );
-        const currentRunningStatus = response.data.isRunning;
+        const response = await $api.patch("/is_running", {
+            object_id: id,
+            is_running: status,
+        });
+        const currentRunningStatus = response.data.is_running;
         return currentRunningStatus;
     }
 }
