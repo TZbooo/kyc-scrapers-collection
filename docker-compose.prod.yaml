@@ -1,0 +1,50 @@
+version: '3'
+
+services:
+  frontend:
+    build:
+      context: ./admin/frontend
+      dockerfile: Dockerfile.prod
+    command: nginx -c /etc/nginx/nginx.conf -g 'daemon off;'
+    ports:
+      - 8080:8080
+
+  backend:
+    build: ./admin/backend
+    command: python main.py
+    volumes:
+      - ./admin/backend:/code
+    ports:
+      - 8000:8000
+    env_file:
+      - .env
+    depends_on:
+      - mongo
+      - redis
+
+  worker:
+    build: ./admin/backend
+    command: arq server.worker.WorkerSettings --watch /code/server
+    env_file:
+      - .env
+    depends_on:
+      - backend
+
+  redis:
+    image: redis:7-alpine
+    ports:
+      - 6379:6379
+
+  mongo:
+    image: mongo
+    restart: always
+    env_file:
+      - .env
+
+  mongo-express:
+    image: mongo-express
+    restart: always
+    ports:
+      - 8081:8081
+    env_file:
+      - .env
