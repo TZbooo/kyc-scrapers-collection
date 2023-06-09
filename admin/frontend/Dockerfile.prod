@@ -6,7 +6,7 @@ WORKDIR /usr/data/www
 
 COPY ./package.json .
 
-RUN npm i
+RUN npm i --also=dev
 COPY . .
 
 RUN npm run build
