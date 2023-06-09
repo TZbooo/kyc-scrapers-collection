@@ -1,4 +1,4 @@
-FROM node:18.14.0 as build
+FROM node as build
 
 ENV VITE_API_BASE_URL="http://localhost:8000"
 
@@ -6,7 +6,7 @@ WORKDIR /usr/data/www
 
 COPY ./package.json .
 
-RUN npm i --include=dev
+RUN npm install
 COPY . .
 
 RUN npm run build
