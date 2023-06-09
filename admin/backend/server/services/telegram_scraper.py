@@ -1,7 +1,7 @@
 from beanie import PydanticObjectId
 from pydantic import HttpUrl
 
-from server.models.telegram_scraper import TelegramScraper
+from server.models.telegram_scraper import TelegramScraper, ArticleAddingStatisticItem
 
 
 async def get_telegram_scraper_list(
@@ -114,4 +114,13 @@ async def increment_telegram_scraper_offset(object_id: PydanticObjectId) -> Tele
 async def delete_telegram_scraper(object_id: PydanticObjectId) -> bool:
     telegram_scraper = await get_telegram_scraper_by_object_id(object_id)
     await telegram_scraper.delete()
+    return True
+
+
+async def add_adding_statistic_item(object_id: PydanticObjectId) -> bool:
+    telegram_scraper = await get_telegram_scraper_by_object_id(object_id)
+    telegram_scraper.article_adding_statistics.append(
+        ArticleAddingStatisticItem()
+    )
+    await telegram_scraper.save()
     return True

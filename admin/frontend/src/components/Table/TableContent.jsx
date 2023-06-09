@@ -16,9 +16,9 @@ const TableContent = observer(({ scraperType }) => {
                         key={tableItem.object_d}
                         id={tableItem.object_id}
                         name={tableItem.name}
-                        total={0}
-                        totalPerMonth={0}
-                        totalPerDay={0}
+                        total={tableItem.total}
+                        totalPerMonth={tableItem.total_per_month}
+                        totalPerDay={tableItem.total_per_day}
                         origin={tableItem.channel_link}
                         isRunning={tableItem.is_running}
                     />

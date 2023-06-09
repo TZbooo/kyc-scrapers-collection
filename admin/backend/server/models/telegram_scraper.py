@@ -1,13 +1,16 @@
+from pytz import timezone
 from datetime import datetime
 
 from beanie import Document
-from pydantic import BaseModel, HttpUrl
+from pydantic import Field, BaseModel, HttpUrl
 
 from .base_config import ConfiguredBaseModel
 
 
 class ArticleAddingStatisticItem(BaseModel):
-    date: datetime
+    created_at: datetime = Field(
+        default_factory=lambda: datetime.now(timezone('Europe/Moscow'))
+    )
 
 
 class TelegramScraper(Document, ConfiguredBaseModel):

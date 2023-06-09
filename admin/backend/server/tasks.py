@@ -19,7 +19,8 @@ from .services.telegram_scraper import (
     get_telegram_scraper_by_channel_link,
     get_telegram_scraper_list,
     set_telegram_scraper_job_id,
-    increment_telegram_scraper_offset
+    increment_telegram_scraper_offset,
+    add_adding_statistic_item
 )
 from .services.telegram_updates_scraper_conf import (
     get_telegram_updates_scraper_conf,
@@ -58,11 +59,14 @@ async def scrape_telegram_channel_job(
             telegram_scraper = await get_telegram_scraper_by_channel_link(channel_link)
 
         await increment_telegram_scraper_offset(telegram_scraper.id)
-        await scrape_message_async(
+        article_added_successfully = await scrape_message_async(
             min_characters=min_characters,
             message=message,
             channel=channel
         )
+        if article_added_successfully:
+            logger.info('add new statistic item')
+            await add_adding_statistic_item(telegram_scraper.id)
     return True
 
 
@@ -85,11 +89,14 @@ async def listen_for_new_telegram_channel_messages_job(ctx, channel_link_list: l
             telegram_scraper = await get_telegram_scraper_by_channel_link(f'https://t.me/{channel.username}')
             min_characters = telegram_scraper.min_characters
 
-            await scrape_message_async(
+            article_added_successfully = await scrape_message_async(
                 min_characters=min_characters,
                 message=message,
                 channel=channel
             )
+            if article_added_successfully:
+                logger.info('add new statistic item')
+                await add_adding_statistic_item(telegram_scraper.id)
 
         await client.run_until_disconnected()
 

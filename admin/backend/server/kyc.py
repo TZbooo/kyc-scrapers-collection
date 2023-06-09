@@ -12,7 +12,7 @@ def add_kyc_article(
     image: io.BytesIO | None,
     origin: str,
     source: str,
-):
+) -> bool:
     data = {
         'name': name,
         'description': description,
@@ -37,8 +37,11 @@ def add_kyc_article(
 
     json_response = response.json()
     article_id = json_response.get('id')
+
     if article_id is None:
         article_id = json_response.get('name')[0]
         logger.info(f'article already created {article_id=}')
+        return False
     else:
         logger.success(f'article added successfully {article_id=}')
+        return True

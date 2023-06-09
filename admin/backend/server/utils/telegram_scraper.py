@@ -9,13 +9,6 @@ from server.config import logger
 from server.kyc import add_kyc_article
 
 
-def get_message_image(message: types.Message) -> io.BytesIO:
-    if isinstance(message.media, types.MessageMediaPhoto):
-        image = io.BytesIO(message.download_media(file=bytes))
-        image.name = f'{message.id}-{uuid.uuid4().hex}.jpg'
-        return image
-
-
 async def get_message_image_async(message: types.Message) -> io.BytesIO:
     if isinstance(message.media, types.MessageMediaPhoto):
         image = io.BytesIO(await message.download_media(file=bytes))
@@ -75,39 +68,6 @@ def get_article_name_and_description(
 
 
 @logger.catch
-def scrape_message(
-    min_characters: int,
-    message: types.Message,
-    channel: types.Channel
-):
-    name_and_description = get_article_name_and_description(
-        message=message,
-        channel=channel,
-        min_characters=min_characters
-    )
-    if name_and_description is None:
-        return
-    name, description = name_and_description
-
-    description = convert_description_to_paragraphs(description)
-    article_date = message.date.strftime('%Y-%m-%d')
-    image = get_message_image(message)
-
-    origin = f'https://t.me/{channel.username}/'
-    source = f'{origin}{message.id}/'
-
-    logger.info(f'{name=} {article_date=} {source=}')
-    add_kyc_article(
-        name=name,
-        description=description,
-        date=article_date,
-        image=image,
-        origin=origin,
-        source=source
-    )
-
-
-@logger.catch
 async def scrape_message_async(
     min_characters: int,
     message: types.Message,
@@ -130,7 +90,7 @@ async def scrape_message_async(
     source = f'{origin}{message.id}/'
 
     logger.info(f'{name=} {article_date=} {source=}')
-    add_kyc_article(
+    return add_kyc_article(
         name=name,
         description=description,
         date=article_date,
