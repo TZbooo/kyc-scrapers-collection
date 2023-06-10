@@ -82,7 +82,7 @@ def scrape_telegram_channel_job_wrapper(
     min_characters: int = 280,
     reverse: bool = False
 ) -> bool:
-    async_to_sync(scrape_telegram_channel_job)(
+    return async_to_sync(scrape_telegram_channel_job)(
         channel_link=channel_link,
         offset=offset,
         limit=limit,
