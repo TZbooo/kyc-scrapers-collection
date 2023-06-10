@@ -8,7 +8,15 @@ import TelegramScraperDeleteForm from "../Forms/TelegramScraper/TelegramScraperD
 import TelegramScraperToggleRunningStatusForm from "../Forms/TelegramScraper/TelegramScraperToggleRunningStatusForm";
 
 const TableItem = observer(
-    ({ id, name, total, totalPerMonth, totalPerDay, origin, isRunning }) => {
+    ({
+        id,
+        name,
+        total,
+        totalPerMonth,
+        totalPerDay,
+        channelLink,
+        isRunning,
+    }) => {
         const [editFormIsDisable, setEditFormIsDisable] = useState(true);
         const [deleteFormIsDisable, setDeleteFormIsDisable] = useState(true);
         const [
@@ -47,8 +55,8 @@ const TableItem = observer(
                         {totalPerDay}
                     </div>
                     <div className='h-[56px] w-[10vw] flex items-center font-normal text-[1.1vw] leading-[21.09px]'>
-                        <a href={origin} className='truncate'>
-                            <span className='underline'>{origin}</span>
+                        <a href={channelLink} className='truncate'>
+                            <span className='underline'>{channelLink}</span>
                         </a>
                     </div>
                     <div className='w-[10vw] flex flex-col gap-[10px]'>
@@ -94,7 +102,7 @@ TableItem.propTypes = {
     total: PropTypes.number.isRequired,
     totalPerMonth: PropTypes.number.isRequired,
     totalPerDay: PropTypes.number.isRequired,
-    origin: PropTypes.string.isRequired,
+    channelLink: PropTypes.string.isRequired,
     isRunning: PropTypes.bool.isRequired,
 };
 

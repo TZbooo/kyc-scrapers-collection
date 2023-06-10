@@ -12,8 +12,8 @@ const TelegramScraperAddForm = observer(({ disable, disableSetter }) => {
 
     const [name, setName] = useState("");
 
-    const [scraperOrigin, setScraperOrigin] = useState("");
-    const [scraperOriginError, setScraperOriginError] = useState("");
+    const [channelLink, setChannelLink] = useState("");
+    const [channelLinkError, setChannelLinkError] = useState("");
 
     const [offset, setOffset] = useState("");
     const [offsetError, setOffsetError] = useState("");
@@ -34,24 +34,24 @@ const TelegramScraperAddForm = observer(({ disable, disableSetter }) => {
             minCharacters,
             offset,
             limit ? limit : null,
-            scraperOrigin,
+            channelLink,
             collectRetro
         );
         disableSetter(true);
         scrapersDataStore.tgScrapersData.push(response);
         setName("");
-        setScraperOrigin("");
+        setChannelLink("");
         setOffset("");
         setLimit("");
         setMinCharacters("");
     };
 
     useEffect(() => {
-        setScraperOriginError(validateChannelLink(scraperOrigin));
+        setChannelLinkError(validateChannelLink(channelLink));
         setOffsetError(validatePositiveNumberInput(offset));
         setLimitError(validatePositiveNumberInput(limit));
         setMinCharactersError(validatePositiveNumberInput(minCharacters));
-    }, [scraperOrigin, offset, limit, minCharacters]);
+    }, [channelLink, offset, limit, minCharacters]);
 
     return (
         <>
@@ -69,9 +69,9 @@ const TelegramScraperAddForm = observer(({ disable, disableSetter }) => {
                 />
                 <TextInput
                     placeholder='Ссылка на канал'
-                    value={scraperOrigin}
-                    valueSetter={setScraperOrigin}
-                    error={scraperOriginError}
+                    value={channelLink}
+                    valueSetter={setChannelLink}
+                    error={channelLinkError}
                 />
                 <TextInput
                     placeholder='Оффсет'

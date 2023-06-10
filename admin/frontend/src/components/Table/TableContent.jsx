@@ -19,7 +19,7 @@ const TableContent = observer(({ scraperType }) => {
                         total={tableItem.total}
                         totalPerMonth={tableItem.total_per_month}
                         totalPerDay={tableItem.total_per_day}
-                        origin={tableItem.channel_link}
+                        channelLink={tableItem.channel_link}
                         isRunning={tableItem.is_running}
                     />
                 ))}
@@ -37,7 +37,7 @@ const TableContent = observer(({ scraperType }) => {
                         total={0}
                         totalPerMonth={0}
                         totalPerDay={0}
-                        origin={tableItem.channel_link}
+                        channelLink={tableItem.channel_link}
                         isRunning={tableItem.is_running}
                     />
                 ))}

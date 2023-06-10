@@ -16,10 +16,8 @@ const TelegramScraperEditForm = observer(
 
         const [name, setName] = useState(scraper.name);
 
-        const [scraperOrigin, setScraperOrigin] = useState(
-            scraper.channel_link
-        );
-        const [scraperOriginError, setScraperOriginError] = useState("");
+        const [channelLink, setChannelLink] = useState(scraper.channel_link);
+        const [channelLinkError, setChannelLinkError] = useState("");
 
         const [offset, setOffset] = useState(scraper.offset);
         const [offsetError, setOffsetError] = useState("");
@@ -32,7 +30,7 @@ const TelegramScraperEditForm = observer(
         );
         const [minCharactersError, setMinCharactersError] = useState("");
 
-        const [collectRetro, setCollectRetro] = useState(scraper.reverse);
+        const [reverse, setReverse] = useState(scraper.reverse);
 
         const handleSubmit = async (event) => {
             event.preventDefault();
@@ -43,24 +41,24 @@ const TelegramScraperEditForm = observer(
                 minCharacters,
                 offset,
                 limit ? limit : null,
-                scraperOrigin,
-                collectRetro
+                channelLink,
+                reverse
             );
             disableSetter(true);
             scraper.name = response.name;
-            scraper.minCharacters = response.minCharacters;
+            scraper.min_characters = response.min_characters;
             scraper.offset = response.offset;
             scraper.limit = response.limit;
-            scraper.origin = response.origin;
-            scraper.collectRetro = response.collectRetro;
+            scraper.channel_link = response.channel_link;
+            scraper.reverse = response.reverse;
         };
 
         useEffect(() => {
-            setScraperOriginError(validateChannelLink(scraperOrigin));
+            setChannelLinkError(validateChannelLink(channelLink));
             setOffsetError(validatePositiveNumberInput(offset));
             setLimitError(validatePositiveNumberInput(limit));
             setMinCharactersError(validatePositiveNumberInput(minCharacters));
-        }, [scraperOrigin, offset, limit, minCharacters]);
+        }, [channelLink, offset, limit, minCharacters]);
 
         return (
             <>
@@ -83,9 +81,9 @@ const TelegramScraperEditForm = observer(
                     />
                     <TextInput
                         placeholder='Ссылка на канал'
-                        value={scraperOrigin}
-                        valueSetter={setScraperOrigin}
-                        error={scraperOriginError}
+                        value={channelLink}
+                        valueSetter={setChannelLink}
+                        error={channelLinkError}
                     />
                     <TextInput
                         placeholder='Оффсет'
@@ -108,8 +106,8 @@ const TelegramScraperEditForm = observer(
                     />
                     <Checkbox
                         placeholder='Ретроспектива'
-                        checked={collectRetro}
-                        checkedSetter={setCollectRetro}
+                        checked={reverse}
+                        checkedSetter={setReverse}
                     />
                 </Form>
             </>

@@ -15,15 +15,15 @@ class ScrapersService {
         return response.data;
     }
 
-    async addScraper(name, minCharacters, offset, limit, origin, collectRetro) {
+    async addScraper(name, minCharacters, offset, limit, channelLink, reverse) {
         const response = await $api.post("/", {
             name: name,
             is_running: true,
             min_characters: minCharacters,
             offset: offset,
             limit: limit,
-            channel_link: origin,
-            reverse: collectRetro,
+            channel_link: channelLink,
+            reverse: reverse,
         });
         return response.data;
     }
@@ -34,17 +34,17 @@ class ScrapersService {
         minCharacters,
         offset,
         limit,
-        origin,
-        collectRetro
+        channelLink,
+        reverse
     ) {
         const response = await $api.put("/", {
             object_id: id,
             name: name,
             offset: offset,
             limit: limit,
-            channel_link: origin,
+            channel_link: channelLink,
             min_characters: minCharacters,
-            reverse: collectRetro,
+            reverse: reverse,
         });
         return response.data;
     }
