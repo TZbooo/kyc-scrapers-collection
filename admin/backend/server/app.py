@@ -3,7 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from .database import init_db
 from .telegram_updates_scraper_conf.services import add_telegram_updates_scraper_conf_if_not_exists
-from .tasks import run_all_telegram_scrapers
+from .jobs import run_all_telegram_scrapers
 from .telegram_scraper.routes import telegram_scraper_router
 
 

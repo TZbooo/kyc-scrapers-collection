@@ -24,11 +24,23 @@ services:
 
   worker:
     build: ./admin/backend
-    command: arq server.worker.WorkerSettings --watch /code/server
+    command: celery -A server.jobs.celery worker -c 3 --loglevel=INFO
     env_file:
       - .env
+    volumes:
+      - ./admin/backend:/code
     depends_on:
-      - backend
+      - redis
+
+  beat:
+    build: ./admin/backend
+    command: celery -A server.jobs.celery beat --loglevel=INFO
+    env_file:
+      - .env
+    volumes:
+      - ./admin/backend:/code
+    depends_on:
+      - redis
 
   redis:
     image: redis:7-alpine

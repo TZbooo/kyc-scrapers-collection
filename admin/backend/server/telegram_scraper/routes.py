@@ -14,7 +14,7 @@ from .services import (
     delete_telegram_scraper,
     get_telegram_scraper_list
 )
-from server.tasks import run_all_telegram_scrapers
+from server.jobs import run_all_telegram_scrapers
 
 
 telegram_scraper_router = APIRouter()

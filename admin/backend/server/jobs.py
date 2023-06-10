@@ -1,16 +1,16 @@
+from celery import Celery
 from pydantic import HttpUrl
-from telethon.sync import TelegramClient, events
+from telethon import TelegramClient, events
 from telethon.sessions import StringSession
-from arq import ArqRedis, create_pool
-from arq.jobs import Job
-from arq.connections import RedisSettings
+from asgiref.sync import async_to_sync
 
 from .config import (
     logger,
-
     MTPROTO_TOKEN,
     MTPROTO_API_ID,
-    MTPROTO_API_HASH
+    MTPROTO_API_HASH,
+    CELERY_BROKER_URL,
+    CELERY_RESULT_BACKEND
 )
 from .database import init_db
 from .telegram_scraper.documents import TelegramScraper
@@ -28,8 +28,12 @@ from .telegram_updates_scraper_conf.services import (
 )
 
 
+celery = Celery(__name__)
+celery.conf.broker_url = CELERY_BROKER_URL
+celery.conf.result_backend = CELERY_RESULT_BACKEND
+
+
 async def scrape_telegram_channel_job(
-    ctx,
     channel_link: HttpUrl,
     offset: int = 0,
     limit: int | None = None,
@@ -70,7 +74,24 @@ async def scrape_telegram_channel_job(
     return True
 
 
-async def listen_for_new_telegram_channel_messages_job(ctx, channel_link_list: list[HttpUrl]):
+@celery.task
+def scrape_telegram_channel_job_wrapper(
+    channel_link: HttpUrl,
+    offset: int = 0,
+    limit: int | None = None,
+    min_characters: int = 280,
+    reverse: bool = False
+) -> bool:
+    async_to_sync(scrape_telegram_channel_job)(
+        channel_link=channel_link,
+        offset=offset,
+        limit=limit,
+        min_characters=min_characters,
+        reverse=reverse
+    )
+
+
+async def listen_for_new_telegram_channel_messages_job(channel_link_list: list[HttpUrl]):
     async with TelegramClient(
         session=StringSession(MTPROTO_TOKEN),
         api_id=MTPROTO_API_ID,
@@ -101,63 +122,44 @@ async def listen_for_new_telegram_channel_messages_job(ctx, channel_link_list: l
         await client.run_until_disconnected()
 
 
+@celery.task
+def listen_for_new_telegram_channel_messages_job_wrapper(channel_link_list: list[HttpUrl]):
+    async_to_sync(listen_for_new_telegram_channel_messages_job)(channel_link_list)
+
+
 async def run_all_telegram_scrapers():
-    pool = await create_pool(RedisSettings(host='redis'))
     telegram_scraper_list = await get_telegram_scraper_list()
 
-    await run_linear_telegram_scrapers(
-        pool=pool,
-        telegram_scraper_list=telegram_scraper_list
-    )
-    await run_telegram_updates_scraper(
-        pool=pool,
-        telegram_scraper_list=telegram_scraper_list
-    )
+    await run_linear_telegram_scrapers(telegram_scraper_list)
+    await run_telegram_updates_scraper(telegram_scraper_list)
 
 
-async def run_linear_telegram_scrapers(
-    pool: ArqRedis,
-    telegram_scraper_list: list[TelegramScraper]
-):
+async def run_linear_telegram_scrapers(telegram_scraper_list: list[TelegramScraper]):
     for telegram_scraper in telegram_scraper_list:
-        job = Job(telegram_scraper.job_id, pool)
-        try:
-            await job.abort()
-            logger.success(f'success abort job {telegram_scraper.job_id}')
-        except Exception as e:
-            logger.error(f'cannot abort job: {e}')
+        if telegram_scraper.job_id:
+            celery.control.revoke(telegram_scraper.job_id, terminate=True)
 
-        job = await pool.enqueue_job(
-            'scrape_telegram_channel_job',
+        job = scrape_telegram_channel_job_wrapper.apply_async(kwargs=dict(
             channel_link=telegram_scraper.channel_link,
             offset=telegram_scraper.offset,
             limit=telegram_scraper.limit,
             min_characters=telegram_scraper.min_characters,
             reverse=telegram_scraper.reverse
-        )
+        ))
         await set_telegram_scraper_job_id(
             object_id=telegram_scraper.id,
-            job_id=job.job_id
+            job_id=job.id
         )
 
 
-async def run_telegram_updates_scraper(
-    pool: ArqRedis,
-    telegram_scraper_list: list[TelegramScraper]
-):
+async def run_telegram_updates_scraper(telegram_scraper_list: list[TelegramScraper]):
     channel_link_list = [i.channel_link for i in telegram_scraper_list]
     telegram_updates_scraper_conf = await get_telegram_updates_scraper_conf()
-    job = Job(telegram_updates_scraper_conf.job_id, pool)
-    try:
-        await job.abort()
-        logger.success(
-            f'success abort job {telegram_updates_scraper_conf.job_id}'
-        )
-    except Exception as e:
-        logger.error(f'cannot abort job: {e}')
 
-    job = await pool.enqueue_job(
-        'listen_for_new_telegram_channel_messages_job',
+    if telegram_updates_scraper_conf.job_id:
+        celery.control.revoke(telegram_updates_scraper_conf.job_id, terminate=True)
+
+    job = listen_for_new_telegram_channel_messages_job_wrapper.apply_async(kwargs=dict(
         channel_link_list=channel_link_list
-    )
-    await set_telegram_updates_scraper_job_id(job.job_id)
+    ))
+    await set_telegram_updates_scraper_job_id(job.id)
