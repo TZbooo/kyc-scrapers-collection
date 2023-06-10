@@ -44,7 +44,7 @@ async def startup():
     await run_all_telegram_scrapers()
 
 
-@app.post('/')
+@app.post('/', response_model_by_alias=False)
 async def add_telegram_scraper_post(data: AddTelegramScraperSchema) -> GetTelegramScraperSchema:
     new_telegram_scraper = await add_telegram_scraper(
         name=data.name,
@@ -59,7 +59,7 @@ async def add_telegram_scraper_post(data: AddTelegramScraperSchema) -> GetTelegr
     return new_telegram_scraper
 
 
-@app.put('/')
+@app.put('/', response_model_by_alias=False)
 async def update_telegram_scraper_put(data: UpdateTelegramScraperSchema) -> GetTelegramScraperSchema:
     updated_telegram_scraper = await update_telegram_scraper(
         object_id=data.object_id,
@@ -74,7 +74,7 @@ async def update_telegram_scraper_put(data: UpdateTelegramScraperSchema) -> GetT
     return updated_telegram_scraper
 
 
-@app.patch('/is_running')
+@app.patch('/is_running', response_model_by_alias=False)
 async def set_telegram_scraper_running_status_patch(
     data: UpdateTelegramScraperRunningStatusSchema
 ) -> GetTelegramScraperSchema:

@@ -1,7 +1,7 @@
 from pytz import timezone
 from datetime import datetime
 
-from beanie import Document
+from beanie import Document, Indexed
 from pydantic import Field, BaseModel, HttpUrl
 
 from .base_config import ConfiguredBaseModel
@@ -20,7 +20,7 @@ class TelegramScraper(Document, ConfiguredBaseModel):
     article_adding_statistics: list[ArticleAddingStatisticItem] = []
 
     name: str
-    channel_link: HttpUrl
+    channel_link: Indexed(HttpUrl, unique=True)
     offset: int
     limit: int | None = None
     reverse: bool = True
