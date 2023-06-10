@@ -14,5 +14,5 @@ class WorkerSettings:
     redis_settings = RedisSettings(
         host='redis'
     )
-    job_timeout = 3600 * 24 * 365 * 10
+    job_timeout = 3600 * 24 * 365 * 10 # 10 years
     allow_abort_jobs = True

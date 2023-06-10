@@ -13,16 +13,16 @@ from .config import (
     MTPROTO_API_HASH
 )
 from .database import init_db
-from .models.telegram_scraper import TelegramScraper
-from .utils.telegram_scraper import scrape_message_async
-from .services.telegram_scraper import (
+from .telegram_scraper.documents import TelegramScraper
+from .telegram_scraper.utils import scrape_message_async
+from .telegram_scraper.services import (
     get_telegram_scraper_by_channel_link,
     get_telegram_scraper_list,
     set_telegram_scraper_job_id,
     increment_telegram_scraper_offset,
     add_adding_statistic_item
 )
-from .services.telegram_updates_scraper_conf import (
+from .telegram_updates_scraper_conf.services import (
     get_telegram_updates_scraper_conf,
     set_telegram_updates_scraper_job_id
 )

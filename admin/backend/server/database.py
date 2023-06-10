@@ -3,8 +3,8 @@ from beanie import init_beanie
 
 from .config import MONGO_URL
 
-from .models.telegram_scraper import TelegramScraper
-from .models.telegram_updates_scraper_conf import TelegramUpdatesScraperConf
+from .telegram_scraper.documents import TelegramScraper
+from .telegram_updates_scraper_conf.documents import TelegramUpdatesScraperConf
 
 
 async def init_db():

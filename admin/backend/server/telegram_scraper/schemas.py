@@ -4,7 +4,7 @@ from datetime import datetime
 from beanie import PydanticObjectId
 from pydantic import BaseModel, HttpUrl, Field, validator
 
-from server.models.telegram_scraper import ArticleAddingStatisticItem
+from .documents import ArticleAddingStatisticItem
 
 
 class BaseTelegramScraperSchema(BaseModel):

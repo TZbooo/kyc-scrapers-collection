@@ -1,4 +1,4 @@
-from server.models.telegram_updates_scraper_conf import TelegramUpdatesScraperConf
+from .documents import TelegramUpdatesScraperConf
 
 
 async def get_telegram_updates_scraper_conf() -> TelegramUpdatesScraperConf | None:

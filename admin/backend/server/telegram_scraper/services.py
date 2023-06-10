@@ -1,7 +1,7 @@
 from beanie import PydanticObjectId
 from pydantic import HttpUrl
 
-from server.models.telegram_scraper import TelegramScraper, ArticleAddingStatisticItem
+from .documents import TelegramScraper, ArticleAddingStatisticItem
 
 
 async def get_telegram_scraper_list(

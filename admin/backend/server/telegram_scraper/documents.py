@@ -4,8 +4,6 @@ from datetime import datetime
 from beanie import Document, Indexed
 from pydantic import Field, BaseModel, HttpUrl
 
-from .base_config import ConfiguredBaseModel
-
 
 class ArticleAddingStatisticItem(BaseModel):
     created_at: datetime = Field(
@@ -13,7 +11,7 @@ class ArticleAddingStatisticItem(BaseModel):
     )
 
 
-class TelegramScraper(Document, ConfiguredBaseModel):
+class TelegramScraper(Document):
     is_running: bool = False
     job_id: str | None = None
 
