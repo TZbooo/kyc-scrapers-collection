@@ -6,9 +6,7 @@ from asgiref.sync import async_to_sync
 
 from .config import (
     logger,
-    MTPROTO_TOKEN,
-    MTPROTO_API_ID,
-    MTPROTO_API_HASH,
+    MTPROTO_ACCOUNT_CYCLE,
     CELERY_BROKER_URL,
     CELERY_RESULT_BACKEND
 )
@@ -43,10 +41,11 @@ async def scrape_telegram_channel_job(
     logger.info(f'start scrape for {channel_link=} {offset=} {limit=}')
 
     await init_db()
+    mtproto_account = next(MTPROTO_ACCOUNT_CYCLE)
     client = TelegramClient(
-        session=StringSession(MTPROTO_TOKEN),
-        api_id=MTPROTO_API_ID,
-        api_hash=MTPROTO_API_HASH
+        session=StringSession(mtproto_account.session),
+        api_id=mtproto_account.api_id,
+        api_hash=mtproto_account.api_hash
     )
     await client.start()
     client.parse_mode = 'html'
@@ -92,10 +91,11 @@ def scrape_telegram_channel_job_wrapper(
 
 
 async def listen_for_new_telegram_channel_messages_job(channel_link_list: list[HttpUrl]):
+    mtproto_account = next(MTPROTO_ACCOUNT_CYCLE)
     async with TelegramClient(
-        session=StringSession(MTPROTO_TOKEN),
-        api_id=MTPROTO_API_ID,
-        api_hash=MTPROTO_API_HASH
+        session=StringSession(mtproto_account.session),
+        api_id=mtproto_account.api_id,
+        api_hash=mtproto_account.api_hash
     ) as client:
         client.parse_mode = 'html'
 
